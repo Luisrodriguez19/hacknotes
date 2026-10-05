@@ -18,7 +18,7 @@ search                  : true
 # ---- Autor (barra lateral) ----
 author:
   name    : "Luis Rodriguez"
-  # avatar: "/assets/images/avatar.png"   # añade tu foto y descomenta
+  avatar  : "/assets/images/avatar.png"
   bio     : "Hacker ético · Seguridad TI · Barranquilla, CO"
   location: "Barranquilla, Colombia"
   links:
