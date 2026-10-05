@@ -1,0 +1,79 @@
+# ====== HackNotes — Jekyll + Minimal Mistakes ======
+# Sitio de prácticas de seguridad (nivel público / sanitizado)
+
+remote_theme            : "mmistakes/minimal-mistakes@master"
+minimal_mistakes_skin   : "dark"   # air, aqua, contrast, dark, dirt, neon, mint, plum, sunrise
+locale                  : "es-ES"
+title                   : "HackNotes"
+title_separator         : "·"
+subtitle                : "Prácticas de seguridad ofensiva y defensiva"
+name                    : "Luis Rodriguez"
+description             : "Writeups y notas de pentesting, red team y blue team — enfoque purple team."
+url                     : "https://luisrodriguez19.github.io"
+baseurl                 : "/hacknotes"
+repository              : "Luisrodriguez19/hacknotes"
+words_per_minute        : 200
+search                  : true
+
+# ---- Autor (barra lateral) ----
+author:
+  name    : "Luis Rodriguez"
+  # avatar: "/assets/images/avatar.png"   # añade tu foto y descomenta
+  bio     : "Hacker ético · Seguridad TI · Barranquilla, CO"
+  location: "Barranquilla, Colombia"
+  links:
+    - label: "GitHub"
+      icon : "fab fa-fw fa-github"
+      url  : "https://github.com/Luisrodriguez19"
+    - label: "Portafolio"
+      icon : "fas fa-fw fa-link"
+      url  : "https://luisrodriguez19.github.io/luisrodriguez-dev/"
+
+footer:
+  links:
+    - label: "GitHub"
+      icon : "fab fa-fw fa-github"
+      url  : "https://github.com/Luisrodriguez19"
+
+# ---- Plugins (soportados por GitHub Pages) ----
+plugins:
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# ---- Paginación del home ----
+paginate      : 5
+paginate_path : "/page:num/"
+
+# ---- Archivos por categoría / tag (modo liquid, compatible con GH Pages) ----
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
+
+include: ["_pages"]
+
+# ---- Valores por defecto de los posts ----
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      share: true
+      related: true
+      show_date: true
+      toc: true
+      toc_sticky: true
+      comments: false
+
+# ---- Aviso legal global ----
+disclaimer: >
+  Todo el contenido es con fines educativos y de laboratorio autorizado.
+  Las técnicas se muestran sobre redes/sistemas propios o con permiso explícito.

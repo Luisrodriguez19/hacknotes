@@ -1,0 +1,10 @@
+# Menú superior
+main:
+  - title: "Inicio"
+    url: /
+  - title: "Writeups"
+    url: /categories/
+  - title: "Tags"
+    url: /tags/
+  - title: "Acerca de"
+    url: /about/
