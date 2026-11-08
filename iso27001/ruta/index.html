@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruta al examen ISO 27001</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concepto: carpeta de papeles de trabajo del auditor. Índice a la izquierda con referencias en monoespaciada, hojas con filas separadas a la derecha. */
+:root{
+  --bg:#F1F3F6; --sheet:#FFFFFF; --ink:#16202B; --mute:#566272; --line:#D6DCE5;
+  --accent:#1F3F8F; --accent-ink:#FFFFFF; --soft:#E6ECF8;
+  --ok:#17724A; --ok-bg:#E2F3EA; --ko:#B3261E; --ko-bg:#FBE7E5; --warn:#855000; --warn-bg:#FBF0DA;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E131A; --sheet:#151C26; --ink:#E7ECF3; --mute:#9AA7B8; --line:#2A3544;
+  --accent:#8DB0FF; --accent-ink:#0E131A; --soft:#1B2740;
+  --ok:#5CD39A; --ok-bg:#12301F; --ko:#FF8B80; --ko-bg:#3A1C1A; --warn:#F2B14C; --warn-bg:#36290F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E131A; --sheet:#151C26; --ink:#E7ECF3; --mute:#9AA7B8; --line:#2A3544;
+  --accent:#8DB0FF; --accent-ink:#0E131A; --soft:#1B2740;
+  --ok:#5CD39A; --ok-bg:#12301F; --ko:#FF8B80; --ko-bg:#3A1C1A; --warn:#F2B14C; --warn-bg:#36290F; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);
+  padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.7rem,4.5vw,2.4rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:.5em 0}
+a{color:var(--accent)}
+.mono,.tag{font-family:var(--f-mono)}
+.shell{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;padding-top:20px}
+.top{max-width:1080px;margin:0 auto;padding-top:22px}
+.top p{color:var(--mute);margin:.4em 0 0;max-width:62ch}
+nav.idx{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);align-self:start;display:flex;flex-direction:column;gap:2px}
+nav.idx button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:baseline;padding:9px 10px;border-radius:6px;border-left:3px solid transparent;color:var(--mute);font-weight:500}
+nav.idx button .n{font-family:var(--f-mono);font-size:.78rem;opacity:.8;min-width:1.6em}
+nav.idx button:hover{background:var(--soft);color:var(--ink)}
+nav.idx button[aria-current="page"]{background:var(--soft);color:var(--ink);border-left-color:var(--accent);font-weight:600}
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:760px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:14px}
+  nav.idx{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;flex-direction:row;overflow-x:auto;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);margin-inline:-2px}
+  nav.idx button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent;border-radius:6px 6px 0 0;padding:8px 10px}
+  nav.idx button[aria-current="page"]{border-bottom-color:var(--accent)}
+}
+main{min-width:0;display:flex;flex-direction:column;gap:18px}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.sheet.flat{border-radius:6px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+.mute{color:var(--mute)}
+.small{font-size:.88rem}
+.tag{display:inline-block;font-size:.76rem;padding:2px 7px;border:1px solid var(--line);border-radius:4px;color:var(--mute);background:var(--bg);white-space:nowrap}
+.tag.new{color:var(--warn);border-color:var(--warn);background:var(--warn-bg)}
+.btn{font:600 .95rem var(--f-body);background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:6px;padding:10px 16px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.sm{padding:6px 11px;font-size:.86rem}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{font:500 .88rem var(--f-body);background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.ok i{background:var(--ok)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{font-family:var(--f-mono);font-weight:500;font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tw{overflow-x:auto}
+details.card{background:var(--sheet);border:1px solid var(--line);border-radius:8px}
+details.card>summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:12px;align-items:baseline;font-family:var(--f-display);font-weight:600;font-size:1.1rem}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:"+";font-family:var(--f-mono);color:var(--accent);min-width:1ch}
+details.card[open]>summary::before{content:"–"}
+details.card .body{padding:0 18px 16px}
+.body ul{margin:.4em 0;padding-left:1.2em}
+.body li{margin:.3em 0}
+.note{border-left:4px solid var(--warn);background:var(--warn-bg);padding:9px 12px;border-radius:0 6px 6px 0;margin:10px 0}
+.note.fix{border-left-color:var(--ko);background:var(--ko-bg)}
+.note.good{border-left-color:var(--ok);background:var(--ok-bg)}
+.qtext{font-size:1.2rem;margin:10px 0 14px;font-family:var(--f-body);font-weight:600;line-height:1.4}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--sheet);width:100%}
+.opt:hover{border-color:var(--accent)}
+.opt .l{font-family:var(--f-mono);font-size:.82rem;min-width:1.7em;height:1.7em;display:grid;place-items:center;border:1px solid var(--line);border-radius:4px;color:var(--mute)}
+.opt.sel{border-color:var(--accent);background:var(--soft)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fb{margin-top:14px;padding:12px 14px;border-radius:8px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok)}
+.fb.ko{background:var(--ko-bg);border-color:var(--ko)}
+.timer{font-family:var(--f-mono);font-weight:500;font-size:1.1rem}
+.timer.low{color:var(--ko)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.qgrid button{font:500 .82rem var(--f-mono);padding:7px 0;border:1px solid var(--line);background:var(--sheet);color:var(--ink);border-radius:4px;cursor:pointer}
+.qgrid button.done{background:var(--soft);border-color:var(--accent)}
+.qgrid button.flag{box-shadow:inset 0 -3px var(--warn)}
+.qgrid button.cur{outline:2px solid var(--accent)}
+.big{font-family:var(--f-display);font-size:2.6rem;font-weight:700;line-height:1}
+input[type=text],input[type=search],select{font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);min-width:0;max-width:100%}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.day{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.day b{font-family:var(--f-mono);font-weight:500;font-size:.82rem;color:var(--accent);min-width:3.2em}
+.day label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .12s,border-color .12s}}
+</style>
+
+</head>
+<body>
+<div class="top">
+  <h1>Ruta al examen ISO 27001</h1>
+  <p>Auditor interno ISO/IEC 27001:2022. Teoría, práctica con casos y simulacros de 40 preguntas, con tu progreso guardado en este navegador. Material de estudio no oficial.</p>
+</div>
+<div class="shell">
+  <nav class="idx" id="idx" aria-label="Secciones"></nav>
+  <main id="view" aria-live="polite"></main>
+</div>
+<script>
+/* ---------- Controles del Anexo A (nombres abreviados). * = nuevo en 2022 ---------- */
+const CTRL_RAW = `5.1|Políticas de seguridad de la información
+5.2|Roles y responsabilidades de seguridad
+5.3|Segregación de funciones
+5.4|Responsabilidades de la dirección
+5.5|Contacto con las autoridades
+5.6|Contacto con grupos de interés especial
+5.7|Inteligencia de amenazas|n
+5.8|Seguridad en la gestión de proyectos
+5.9|Inventario de información y otros activos
+5.10|Uso aceptable de la información y otros activos
+5.11|Devolución de activos
+5.12|Clasificación de la información
+5.13|Etiquetado de la información
+5.14|Transferencia de información
+5.15|Control de acceso
+5.16|Gestión de identidad
+5.17|Información de autenticación
+5.18|Derechos de acceso
+5.19|Seguridad en las relaciones con proveedores
+5.20|Seguridad en los acuerdos con proveedores
+5.21|Seguridad en la cadena de suministro de TIC
+5.22|Seguimiento, revisión y cambios de servicios de proveedores
+5.23|Seguridad en el uso de servicios en la nube|n
+5.24|Planificación y preparación de la gestión de incidentes
+5.25|Evaluación y decisión sobre eventos de seguridad
+5.26|Respuesta a incidentes
+5.27|Aprender de los incidentes
+5.28|Recolección de evidencia
+5.29|Seguridad durante una interrupción
+5.30|Preparación de las TIC para la continuidad|n
+5.31|Requisitos legales, estatutarios, regulatorios y contractuales
+5.32|Derechos de propiedad intelectual
+5.33|Protección de registros
+5.34|Privacidad y protección de datos personales
+5.35|Revisión independiente de la seguridad
+5.36|Cumplimiento de políticas, normas y estándares
+5.37|Procedimientos operativos documentados
+6.1|Verificación de antecedentes
+6.2|Términos y condiciones de contratación
+6.3|Concienciación, educación y capacitación
+6.4|Proceso disciplinario
+6.5|Responsabilidades tras terminar o cambiar el empleo
+6.6|Acuerdos de confidencialidad
+6.7|Trabajo remoto
+6.8|Reporte de eventos de seguridad
+7.1|Perímetros de seguridad física
+7.2|Entrada física
+7.3|Seguridad de oficinas, salas e instalaciones
+7.4|Monitoreo de la seguridad física|n
+7.5|Protección contra amenazas físicas y ambientales
+7.6|Trabajo en áreas seguras
+7.7|Escritorio y pantalla limpios
+7.8|Ubicación y protección de equipos
+7.9|Seguridad de activos fuera de las instalaciones
+7.10|Medios de almacenamiento
+7.11|Servicios de suministro
+7.12|Seguridad del cableado
+7.13|Mantenimiento de equipos
+7.14|Eliminación segura o reutilización de equipos
+8.1|Dispositivos de punto final del usuario
+8.2|Derechos de acceso privilegiado
+8.3|Restricción de acceso a la información
+8.4|Acceso al código fuente
+8.5|Autenticación segura
+8.6|Gestión de la capacidad
+8.7|Protección contra malware
+8.8|Gestión de vulnerabilidades técnicas
+8.9|Gestión de la configuración|n
+8.10|Eliminación de información|n
+8.11|Enmascaramiento de datos|n
+8.12|Prevención de fuga de datos|n
+8.13|Copias de seguridad de la información
+8.14|Redundancia de las instalaciones de procesamiento
+8.15|Registro de eventos (logging)
+8.16|Actividades de monitoreo|n
+8.17|Sincronización de relojes
+8.18|Uso de programas utilitarios privilegiados
+8.19|Instalación de software en sistemas operativos
+8.20|Seguridad de redes
+8.21|Seguridad de los servicios de red
+8.22|Segregación de redes
+8.23|Filtrado web|n
+8.24|Uso de criptografía
+8.25|Ciclo de vida de desarrollo seguro
+8.26|Requisitos de seguridad de las aplicaciones
+8.27|Arquitectura de sistemas seguros e ingeniería
+8.28|Codificación segura|n
+8.29|Pruebas de seguridad en desarrollo y aceptación
+8.30|Desarrollo subcontratado
+8.31|Separación de entornos de desarrollo, prueba y producción
+8.32|Gestión de cambios
+8.33|Información de prueba
+8.34|Protección de sistemas durante pruebas de auditoría`;
+const CTRL = CTRL_RAW.split("\n").map(l => { const p = l.split("|"); return { id: p[0], name: p[1], nuevo: p[2] === "n" }; });
+const CN = {}; CTRL.forEach(c => CN[c.id] = c.name);
+const TEMAS_A = { "5": "Organizacionales", "6": "Personas", "7": "Físicos", "8": "Tecnológicos" };
+const BLOQUES = [
+  ["Accesos", ["5.15", "5.16", "5.17", "5.18", "8.2", "8.3", "8.5"]],
+  ["Proveedores", ["5.19", "5.20", "5.21", "5.22", "5.23"]],
+  ["Incidentes", ["5.24", "5.25", "5.26", "5.27", "5.28", "6.8"]],
+  ["Continuidad", ["5.29", "5.30", "8.13", "8.14"]],
+  ["Cumplimiento", ["5.31", "5.32", "5.33", "5.34", "5.35", "5.36", "5.37"]],
+  ["Datos", ["5.12", "5.13", "5.14", "8.10", "8.11", "8.12", "8.24"]],
+  ["Redes", ["8.20", "8.21", "8.22", "8.23"]],
+  ["Desarrollo", ["8.25", "8.26", "8.27", "8.28", "8.29", "8.30", "8.31", "8.32", "8.33", "8.34"]],
+  ["Monitoreo y logs", ["8.15", "8.16", "8.17", "7.4"]],
+  ["Nuevos 2022", CTRL.filter(c => c.nuevo).map(c => c.id)]
+];
+/* ---------- Banco de preguntas (redactadas a partir de la norma ISO/IEC 27001:2022) ---------- */
+const TEMAS = {
+  fund: "Fundamentos y familia", c4: "Cláusula 4 · Contexto", c5: "Cláusula 5 · Liderazgo", c6: "Cláusula 6 · Riesgos y objetivos",
+  c78: "Cláusulas 7 y 8", anexo: "Anexo A", ctrl: "Evidencia ↔ control", ind: "9.1 · Indicadores", aud: "9.2 · Auditoría y 19011",
+  hall: "Clasifica el hallazgo", nc: "No conformidades", rev: "9.3 y 10", caso: "Casos integradores"
+};
+const BANK = [];
+const cnt = {};
+function add(t, q, o, a, w, r, fix) { cnt[t] = (cnt[t] || 0); BANK.push({ id: t + (cnt[t]++), t, q, o, a, w, r: r || "", fix: !!fix }); }
+
+/* Fundamentos */
+add("fund", "¿Qué norma de la familia 27000 contiene los requisitos contra los que se certifica una organización?", ["ISO/IEC 27000", "ISO/IEC 27001", "ISO/IEC 27002", "ISO/IEC 27005"], 1, "La 27001 es la única certificable. La 27000 da vocabulario, la 27002 guía de controles y la 27005 gestión de riesgos.", "Familia 27000");
+add("fund", "La guía de implementación de los controles del Anexo A, con propósito y ejemplos, está en:", ["ISO/IEC 27002", "ISO/IEC 27003", "ISO/IEC 27004", "ISO 22301"], 0, "La 27002:2022 explica cada control. La 27003 guía la implementación del SGSI, la 27004 la medición y la 22301 la continuidad.", "ISO/IEC 27002");
+add("fund", "Para definir métricas e indicadores del SGSI, ¿qué norma consultas?", ["ISO/IEC 27004", "ISO/IEC 27005", "ISO 19011", "ISO/IEC 27006"], 0, "La 27004 trata la medición del SGSI, con desempeño y efectividad.", "ISO/IEC 27004");
+add("fund", "¿Qué norma ofrece directrices para auditar sistemas de gestión?", ["ISO 19011", "ISO/IEC 27000", "ISO/IEC 27005", "ISO 22301"], 0, "La 19011 guía programa, plan, conducción, informe y competencia del auditor. La 27006 fija requisitos para los organismos que certifican.", "ISO 19011");
+add("fund", "¿Qué norma se usa para definir RTO, RPO y un plan de continuidad del negocio?", ["ISO 22301", "ISO/IEC 27001", "ISO 19011", "ISO/IEC 27004"], 0, "27001 no define tiempos de recuperación. El control 5.30 solo exige preparar las TIC. Para el BCP, el BIA y las pruebas se usa la 22301.", "ISO 22301");
+add("fund", "Las cláusulas obligatorias y certificables de ISO 27001:2022 son:", ["1 a 10", "4 a 10", "5 a 10", "4 a 9"], 1, "Las cláusulas 1 a 3 son introductorias: objeto, referencias normativas y términos.", "Estructura");
+add("fund", "Respecto del Anexo A es correcto afirmar que:", ["Los 93 controles son obligatorios para toda organización", "Se determinan los controles necesarios según el tratamiento de riesgos, se comparan con el Anexo A y se justifica lo excluido en la SoA", "Reemplaza el proceso de evaluación de riesgos", "No se pueden agregar controles que no estén en el Anexo A"], 1, "6.1.3 b a d. La nota 3 de 6.1.3 aclara que el Anexo A no es exhaustivo y se pueden añadir controles.", "6.1.3");
+add("fund", "Las tres propiedades de la información que protege el SGSI son:", ["Confidencialidad, integridad y disponibilidad", "Eficacia, eficiencia y efectividad", "Identificación, autenticación y autorización", "Prevención, detección y respuesta"], 0, "Es la tríada CID. Las otras opciones son otros tríos de conceptos.", "Fundamentos");
+add("fund", "El ciclo de mejora continua que sigue la estructura del SGSI es:", ["PHVA (planificar, hacer, verificar, actuar)", "FODA", "RACI", "PESTEL"], 0, "Planificar es la cláusula 6, hacer la 7 y 8, verificar la 9 y actuar la 10.", "Estructura");
+add("fund", "La estructura común de cláusulas de las normas ISO de sistemas de gestión (9001, 14001, 22301, 27001) proviene del:", ["Anexo SL", "Anexo A", "Anexo B", "Anexo C"], 0, "El Anexo SL es la estructura de alto nivel compartida. Por eso 9001 y 27001 se integran.", "Anexo SL");
+
+/* Cláusula 4 */
+add("c4", "¿Qué cláusula exige determinar las cuestiones externas e internas pertinentes para el SGSI?", ["4.1", "4.2", "4.3", "4.4"], 0, "4.1 es el contexto de la organización. 4.2 son las partes interesadas, 4.3 el alcance y 4.4 el SGSI.", "4.1");
+add("c4", "Una práctica habitual analiza el contexto externo con ___ y el interno con ___:", ["PESTEL / FODA", "FODA / PESTEL", "RACI / PESTEL", "BIA / FODA"], 0, "PESTEL mira lo externo y da amenazas y oportunidades. FODA se usa para lo interno: fortalezas y debilidades. La norma no impone técnicas.", "4.1");
+add("c4", "En un FODA, fortalezas y debilidades provienen de:", ["Factores internos", "Factores externos", "Los requisitos legales", "Los proveedores"], 0, "Las oportunidades y amenazas son externas. Fortalezas y debilidades son internas.", "4.1");
+add("c4", "¿Cuál NO es algo que 4.2 pide determinar?", ["Las partes interesadas relevantes", "Sus requisitos pertinentes", "Cuáles de esos requisitos se abordarán con el SGSI", "El presupuesto anual de cada parte interesada"], 3, "4.2 pide partes interesadas, sus requisitos y cuáles se abordan en el SGSI.", "4.2");
+add("c4", "Un requisito legal o contractual es una ___ y un deseo no exigible es una ___:", ["necesidad / expectativa", "expectativa / necesidad", "vulnerabilidad / amenaza", "fortaleza / debilidad"], 0, "Criterio habitual. La norma dice que los requisitos de las partes interesadas pueden incluir requisitos legales, reglamentarios y contractuales.", "4.2");
+add("c4", "Al determinar el alcance (4.3) la organización debe considerar:", ["Las cuestiones de 4.1, los requisitos de 4.2 y las interfaces y dependencias con otras organizaciones", "Solo los activos de TI", "Solo los requisitos del certificador", "Solo los controles del Anexo A"], 0, "Esos son los tres insumos. Un mapa de procesos ayuda a ver interfaces y dependencias.", "4.3");
+add("c4", "El alcance del SGSI debe estar:", ["Disponible como información documentada", "Aprobado por el certificador antes de implementar", "Limitado al área de TI", "Definido solo al final del proyecto"], 0, "4.3: el alcance debe estar disponible como información documentada.", "4.3");
+add("c4", "Los riesgos que se evalúan según 6.1.2 son los asociados a la información:", ["Dentro del alcance del SGSI", "De toda la industria", "Solo de los sistemas críticos", "Solo de TI"], 0, "6.1.2 c1. Por eso lo que declaras en el alcance te obliga a identificar activos y riesgos. Lo demás se cubre solo con controles de la SoA.", "6.1.2 c");
+add("c4", "4.4 exige a la organización:", ["Establecer, implementar, mantener y mejorar continuamente un SGSI", "Certificarse cada año", "Contratar un CISO", "Implementar los 93 controles"], 0, "4.4 describe el sistema y sus procesos e interacciones.", "4.4");
+
+/* Cláusula 5 */
+add("c5", "¿Quién establece la política de seguridad de la información?", ["La alta dirección", "El CISO", "Auditoría interna", "Todos los empleados"], 0, "5.2. Puede delegar la redacción pero no la responsabilidad.", "5.2");
+add("c5", "Según 5.2 la política debe incluir un compromiso de:", ["Satisfacer los requisitos aplicables y de mejora continua del SGSI", "Certificarse en ISO 22301", "Reducir a cero todos los riesgos", "Contratar solo proveedores certificados"], 0, "5.2 c y d. Además debe ser apropiada al propósito de la organización e incluir objetivos o el marco para fijarlos.", "5.2");
+add("c5", "Además de su contenido (a a d), 5.2 exige que la política:", ["Esté documentada, se comunique dentro de la organización y esté disponible para las partes interesadas según corresponda", "Se publique en el diario oficial", "La firme el certificador", "Se revise cada mes"], 0, "5.2 e, f y g. Ojo: «comunicada» sí es una exigencia de 5.2.", "5.2 e-g");
+add("c5", "«Apropiada para el propósito de la organización» significa que la política:", ["Se adapta a su realidad, no se copia de otra empresa", "Es igual para todas las empresas", "Es lo más corta posible", "Es idéntica a la 27002"], 0, "No es lo mismo la política de un restaurante de barrio que la de un banco.", "5.2 a");
+add("c5", "¿Cuál NO es una forma de demostrar liderazgo y compromiso según 5.1?", ["Asegurar la integración de los requisitos del SGSI en los procesos", "Asegurar que los recursos estén disponibles", "Promover la mejora continua", "Ejecutar personalmente cada auditoría interna"], 3, "5.1 a a h incluye política y objetivos compatibles con la estrategia, integración, recursos, comunicar la importancia, resultados previstos, apoyar personas, mejora continua y apoyar otros roles.", "5.1");
+add("c5", "¿Qué cláusula exige que las responsabilidades y autoridades de los roles de seguridad se asignen y comuniquen?", ["5.3", "5.1", "5.2", "7.1"], 0, "5.3. Algunos resúmenes lo agrupan con liderazgo, pero la norma lo ubica en 5.3.", "5.3");
+add("c5", "5.3 pide a la alta dirección asignar responsabilidad y autoridad para:", ["Asegurar que el SGSI se ajuste a los requisitos de la norma e informar su desempeño a la alta dirección", "Aprobar los resultados del certificador", "Ejecutar los controles técnicos", "Seleccionar proveedores"], 0, "5.3 a y b.", "5.3");
+add("c5", "Un gerente general sin formación en seguridad puede:", ["Delegar la ejecución técnica, pero no su responsabilidad de liderazgo (recursos, integración, política)", "Delegar todo, incluida la responsabilidad", "No delegar nada", "Delegar solo en proveedores"], 0, "El rol de seguridad ejecuta, la alta dirección asegura recursos, autoridad e integración.", "5.1");
+add("c5", "Según 5.1 a), la política y los objetivos de seguridad deben ser:", ["Compatibles con la dirección estratégica de la organización", "Idénticos a los del certificador", "Aprobados por TI", "Iguales a los de la competencia"], 0, "Por eso conviene partir del objetivo de negocio y derivar de ahí el de seguridad.", "5.1 a");
+
+/* Cláusula 6 */
+add("c6", "6.1.1 indica que al planificar el SGSI se deben considerar:", ["Las cuestiones de 4.1 y los requisitos de 4.2", "Solo los controles del Anexo A", "Solo resultados de auditorías", "El presupuesto de TI"], 0, "Con eso se determinan los riesgos y oportunidades a abordar.", "6.1.1");
+add("c6", "Los criterios de riesgo que manda establecer 6.1.2 a) incluyen:", ["Criterios de aceptación del riesgo y criterios para realizar evaluaciones", "Criterios de selección de auditores", "Criterios de clasificación de la información", "Criterios de selección de proveedores"], 0, "Distinción habitual: aceptación y evaluación.", "6.1.2 a");
+add("c6", "Además de los riesgos, 6.1.2 c) pide identificar:", ["A los propietarios de los riesgos", "A los auditores", "A los certificadores", "Al CISO"], 0, "Cada riesgo debe tener un propietario.", "6.1.2 c");
+add("c6", "La redacción estándar de un escenario de riesgo combina:", ["Activo, amenaza y vulnerabilidad", "Impacto, probabilidad y nivel", "Política, objetivo y control", "Causa, efecto y acción"], 0, "Ejemplo: fuga de datos (amenaza) por falta de cifrado en tránsito (vulnerabilidad) sobre la base de clientes (activo).", "6.1.2");
+add("c6", "En las metodologías habituales, el nivel de riesgo se calcula como:", ["Impacto × probabilidad", "Impacto + amenaza", "Activo × control", "Probabilidad − impacto"], 0, "6.1.2 d pide evaluar consecuencias, probabilidad y determinar niveles.", "6.1.2 d");
+add("c6", "El riesgo antes de aplicar cualquier control es el riesgo:", ["Inherente", "Actual", "Residual", "Aceptado"], 0, "Inherente es el riesgo bruto. «Actual» no es un término de la norma.", "6.1.2");
+add("c6", "El riesgo que queda después de aplicar el plan de tratamiento es el:", ["Residual", "Inherente", "Actual", "Potencial"], 0, "Los propietarios de los riesgos lo aceptan (6.1.3 f).", "6.1.3 f");
+add("c6", "Contratar un seguro cibernético para cubrir pérdidas es una opción de tratamiento de tipo:", ["Transferir (compartir)", "Evitar", "Aceptar (retener)", "Reducir"], 0, "Se traslada la consecuencia económica a un tercero. El riesgo no desaparece.", "6.1.3 a");
+add("c6", "Dejar de ofrecer un servicio porque el riesgo es inaceptable corresponde a:", ["Evitar", "Aceptar", "Transferir", "Reducir"], 0, "Evitar es no hacer la actividad que genera el riesgo.", "6.1.3 a");
+add("c6", "Implementar MFA para bajar la probabilidad de un acceso indebido es:", ["Reducir o mitigar", "Aceptar", "Evitar", "Transferir"], 0, "Es agregar o madurar controles.", "6.1.3 a");
+add("c6", "¿Quién aprueba el plan de tratamiento y acepta los riesgos residuales (6.1.3 f)?", ["Los propietarios de los riesgos", "El certificador", "El auditor líder", "El proveedor"], 0, "Es frecuente confundirlo con la alta dirección. La norma dice propietarios de los riesgos.", "6.1.3 f");
+add("c6", "El orden de 6.1.3 es:", ["Opciones de tratamiento, controles necesarios, comparar con el Anexo A, SoA, plan de tratamiento, aprobación y aceptación del riesgo residual", "SoA, evaluar riesgos, seleccionar controles, auditar", "Plan de tratamiento, SoA, identificar riesgos", "Comparar con el Anexo A, evaluar riesgos, definir criterios"], 0, "6.1.3 a a f.", "6.1.3");
+add("c6", "¿Qué NO debe contener la Declaración de Aplicabilidad?", ["Los resultados de la última auditoría interna", "Los controles necesarios", "La justificación de las inclusiones", "La justificación de las exclusiones del Anexo A"], 0, "6.1.3 d: controles necesarios, justificación de inclusión, si están implementados o no y justificación de exclusión.", "6.1.3 d");
+add("c6", "Los objetivos de seguridad (6.2) deben ser, entre otros:", ["Coherentes con la política, medibles si es factible, monitoreados, comunicados y actualizados", "Aprobados por el certificador", "Idénticos para todas las áreas", "Confidenciales"], 0, "6.2 a a g, más documentados.", "6.2");
+add("c6", "Al planificar cómo lograr los objetivos, 6.2 pide determinar:", ["Qué se hará, recursos, responsable, cuándo se completará y cómo se evaluarán los resultados", "Solo el costo", "Solo el responsable", "Solo los plazos"], 0, "Es una lista de cinco puntos: h a l.", "6.2");
+add("c6", "¿Qué cláusula es nueva en la versión 2022?", ["6.3 Planificación de cambios", "6.1.3", "8.3", "9.1"], 0, "Los cambios al SGSI deben realizarse de manera planificada.", "6.3");
+add("c6", "En la práctica habitual, un control correctivo como un seguro actúa sobre todo en:", ["El impacto", "La probabilidad", "La vulnerabilidad", "El activo"], 0, "Los preventivos y detectivos reducen probabilidad. Los correctivos reducen impacto.", "Práctica habitual");
+add("c6", "¿Qué cláusula exige implementar el plan de tratamiento de riesgos?", ["8.3", "6.1.3", "9.1", "10.2"], 0, "6.1.3 lo define y 8.3 lo implementa.", "8.3");
+add("c6", "¿Qué cláusula exige evaluar riesgos a intervalos planificados o ante cambios significativos?", ["8.2", "6.1.2", "9.2", "7.4"], 0, "6.1.2 define el proceso y 8.2 lo ejecuta.", "8.2");
+add("c6", "Las evaluaciones de riesgos repetidas deben producir resultados:", ["Consistentes, válidos y comparables", "Siempre más bajos", "Idénticos aunque haya cambios", "Aprobados por el certificador"], 0, "6.1.2 b.", "6.1.2 b");
+
+/* Cláusulas 7 y 8 */
+add("c78", "7.1 exige determinar y proporcionar los recursos para:", ["Establecer, implementar, mantener y mejorar continuamente el SGSI", "Solo comprar herramientas", "Solo la certificación", "Solo capacitar"], 0, "Cubre todo el ciclo de vida del sistema.", "7.1");
+add("c78", "Como evidencia de competencia (7.2) la organización debe conservar:", ["Información documentada apropiada", "Solo certificados internacionales", "Nada, basta la experiencia", "Solo el currículum"], 0, "Puede ser educación, formación o experiencia, pero hay que evidenciarlo.", "7.2 d");
+add("c78", "7.3 (toma de conciencia) pide que las personas conozcan:", ["La política, su contribución al SGSI y las consecuencias de incumplir", "Todos los controles del Anexo A", "El plan de auditoría", "Los indicadores estratégicos"], 0, "Son tres puntos: a, b y c.", "7.3");
+add("c78", "¿Cuál NO está en lo que 7.4 manda determinar sobre comunicación?", ["Cuánto cuesta comunicar", "Sobre qué comunicar", "Cuándo comunicar", "Con quién y cómo comunicar"], 0, "7.4 pide qué, cuándo, con quién y cómo. El «cuánto» no está.", "7.4");
+add("c78", "Al crear y actualizar información documentada, 7.5.2 asegura:", ["Identificación y descripción, formato y soporte, revisión y aprobación", "Solo la firma del gerente", "Solo un respaldo", "Solo la traducción"], 0, "Título, fecha, autor o referencia; idioma y medio; revisión y aprobación.", "7.5.2");
+add("c78", "El control de versiones y la retención y disposición de documentos pertenecen a:", ["7.5.3", "7.5.1", "8.1", "9.1"], 0, "7.5.3 e y f.", "7.5.3");
+add("c78", "Según 8.1, los procesos, productos o servicios externalizados relevantes para el SGSI deben:", ["Estar controlados", "Quedar fuera del alcance automáticamente", "Ser auditados solo por el proveedor", "Ser internalizados"], 0, "La responsabilidad sigue siendo de la organización.", "8.1");
+add("c78", "¿Qué cláusula trata la información documentada?", ["7.5", "7.4", "8.2", "9.3"], 0, "7.5 completa: generalidades, creación y actualización, y control.", "7.5");
+
+/* Anexo A */
+add("anexo", "¿Cuántos controles tiene el Anexo A de ISO/IEC 27001:2022?", ["93", "114", "98", "82"], 0, "La versión 2013 tenía 114. Cuenta de control: 114 − 56 fusionados + 24 resultantes + 11 nuevos = 93.", "Anexo A");
+add("anexo", "Los cuatro temas del Anexo A son:", ["Organizacionales, personas, físicos y tecnológicos", "Preventivos, detectivos, correctivos y disuasivos", "Estratégicos, tácticos, operativos y legales", "Confidencialidad, integridad, disponibilidad y trazabilidad"], 0, "Las otras opciones son atributos o clasificaciones ajenas al Anexo.", "Anexo A");
+add("anexo", "Controles por tema (A.5 / A.6 / A.7 / A.8):", ["37 / 8 / 14 / 34", "34 / 8 / 14 / 37", "37 / 14 / 8 / 34", "14 / 8 / 37 / 34"], 0, "37 + 8 + 14 + 34 = 93.", "Anexo A");
+add("anexo", "¿Cuántos controles nuevos introdujo la versión 2022?", ["11", "24", "56", "35"], 0, "24 es la cifra de controles resultantes de fusiones.", "Anexo A");
+add("anexo", "¿Cuál de estos controles es NUEVO en 2022?", ["8.12 Prevención de fuga de datos", "8.13 Copias de seguridad", "5.15 Control de acceso", "6.3 Concienciación y capacitación"], 0, "Nuevos: 5.7, 5.23, 5.30, 7.4, 8.9, 8.10, 8.11, 8.12, 8.16, 8.23 y 8.28.", "Anexo A");
+add("anexo", "¿Cuál de estos controles NO es nuevo en 2022?", ["8.5 Autenticación segura", "8.11 Enmascaramiento de datos", "8.16 Actividades de monitoreo", "8.23 Filtrado web"], 0, "8.5 viene del control de inicio de sesión seguro de 2013.", "Anexo A");
+add("anexo", "Un control que identifica un evento de seguridad cuando ya ocurrió es de tipo:", ["Detectivo", "Preventivo", "Correctivo", "Compensatorio"], 0, "27002:2022 clasifica los controles como preventivos, detectivos y correctivos.", "27002 atributos");
+add("anexo", "El inventario de información y otros activos con su propietario es el control:", ["5.9", "5.1", "8.1", "7.14"], 0, "No es una cláusula, es un control. El inventario de seguridad no es el contable.", "A.5.9");
+add("anexo", "Las políticas específicas por tema (copias de seguridad, VPN, EDR) se declaran en:", ["El control 5.1", "Solo en la cláusula 5.2", "El 9.3", "El 10.2"], 0, "5.2 es la política general. 5.1 incluye las políticas por tema, más detalladas.", "A.5.1");
+add("anexo", "Otorgar, revisar y revocar accesos oportunamente corresponde al control:", ["5.18 Derechos de acceso", "5.15 Control de acceso", "5.16 Gestión de identidad", "5.17 Información de autenticación"], 0, "5.15 restringe el acceso según necesidad. El ciclo de otorgar, revisar y revocar es 5.18.", "A.5.18");
+add("anexo", "El ciclo de vida de la identidad digital de una persona es el control:", ["5.16", "5.15", "5.18", "8.5"], 0, "5.16 Gestión de identidad.", "A.5.16");
+add("anexo", "Seguridad en el uso de servicios en la nube (nuevo en 2022):", ["5.23", "5.19", "8.20", "7.9"], 0, "Se gestiona el riesgo durante todo el ciclo de adopción de la nube.", "A.5.23");
+add("anexo", "El control que exige preparar las TIC para la continuidad del negocio es:", ["5.30", "5.29", "5.24", "8.14"], 0, "5.29 es la seguridad durante una interrupción. 5.30 prepara las TIC.", "A.5.30");
+add("anexo", "El monitoreo físico (CCTV, alarmas) es el control nuevo:", ["7.4", "7.2", "7.1", "7.5"], 0, "7.2 es entrada física y 7.5 amenazas físicas y ambientales.", "A.7.4");
+add("anexo", "Auditar la seguridad con independencia del área evaluada es el control:", ["5.35", "5.36", "5.31", "5.37"], 0, "5.35 revisión independiente. 5.36 es cumplimiento de políticas y normas.", "A.5.35");
+/* Evidencia ↔ control */
+function ctl(ev, ok, ds, w) { const ids = [ok].concat(ds); add("ctrl", "Evidencia: «" + ev + "». ¿A qué control del Anexo A corresponde?", ids.map(i => "A." + i + " " + CN[i]), 0, w, "A." + ok); }
+ctl("Una cláusula del contrato de trabajo obliga al colaborador a cumplir las políticas de seguridad.", "6.2", ["6.4", "6.6", "5.4"], "6.2 son los términos y condiciones, lo que se firma al contratar. 6.6 es el acuerdo de confidencialidad y 6.4 las sanciones.");
+ctl("Talleres semestrales de seguridad con evaluación de aprendizaje para todo el personal.", "6.3", ["6.8", "6.4", "5.4"], "Formar y generar cultura es 6.3.");
+ctl("Acta de la prueba de recuperación de una base de datos desde la última copia.", "8.13", ["8.14", "5.30", "8.10"], "Las copias de seguridad y probar su restauración son 8.13.");
+ctl("La red de invitados está aislada de la red donde operan los servidores de producción.", "8.22", ["8.20", "8.21", "8.23"], "Separar redes por criticidad es segregación de redes.");
+ctl("Un centro de operaciones revisa alertas de comportamiento inusual en servidores y redes.", "8.16", ["8.15", "8.17", "5.25"], "8.16 vigila comportamiento anómalo. 8.15 solo registra eventos.");
+ctl("Sensores de movimiento y alarmas conectadas a una central de vigilancia en el edificio.", "7.4", ["7.2", "7.1", "7.5"], "El monitoreo de la seguridad física es 7.4. 7.2 se refiere a controlar quién entra.");
+ctl("Los datos sensibles se cifran en reposo y las claves de cifrado se rotan según política.", "8.24", ["8.5", "8.4", "5.17"], "El uso de criptografía incluye la gestión de claves.");
+ctl("Checklist de salida que exige devolver equipos, llaves y credenciales físicas al terminar el contrato.", "5.11", ["6.5", "5.9", "7.9"], "Devolver activos al terminar la relación es 5.11.");
+ctl("En el sistema de soporte el documento de identidad aparece con asteriscos salvo para quien lo necesita.", "8.11", ["8.24", "8.12", "5.33"], "Ocultar parcialmente datos es enmascaramiento.");
+ctl("Una herramienta detecta y detiene la salida de archivos con datos de clientes hacia servicios personales en la nube.", "8.12", ["5.14", "8.3", "5.13"], "Detectar y bloquear salidas no autorizadas es prevención de fuga de datos (DLP).");
+ctl("Un escáner semanal clasifica vulnerabilidades y asigna plazos de corrección según su gravedad.", "8.8", ["8.7", "8.9", "5.7"], "Gestión de vulnerabilidades técnicas.");
+ctl("Cada servidor nuevo se despliega desde una plantilla con configuración segura aprobada.", "8.9", ["8.8", "8.19", "8.32"], "Establecer y mantener configuraciones seguras es 8.9, control nuevo.");
+ctl("Las TIC tienen un plan de recuperación con tiempos objetivo acordados con el negocio y probados.", "5.30", ["5.29", "8.14", "5.24"], "Preparar las TIC para la continuidad es 5.30.");
+ctl("El contrato con el proveedor de nube incluye obligaciones de seguridad y confidencialidad.", "5.20", ["5.19", "5.22", "5.21"], "Abordar la seguridad dentro de los acuerdos con proveedores es 5.20.");
+ctl("Cuando alguien cambia de puesto se ajustan sus permisos y los accesos se revisan periódicamente.", "5.18", ["5.15", "5.16", "8.2"], "Otorgar, revisar y revocar accesos es 5.18.");
+ctl("Los colaboradores guardan documentos sensibles bajo llave y bloquean la pantalla al levantarse.", "7.7", ["7.6", "7.8", "5.10"], "Evitar exponer información al dejar el puesto es 7.7.");
+ctl("Antes de ofrecer el cargo, RR. HH. valida referencias laborales y antecedentes según la ley.", "6.1", ["6.2", "5.31", "6.6"], "Es el primer control de personas.");
+ctl("Las cuentas con privilegios elevados se usan solo para tareas administrativas y su uso queda registrado.", "8.2", ["5.15", "5.18", "5.17"], "Los privilegios elevados se restringen y monitorean en 8.2.");
+ctl("Tras un incidente se hace una reunión para extraer mejoras al proceso de respuesta.", "5.27", ["5.26", "5.28", "5.25"], "Aprender de los incidentes es 5.27.");
+ctl("El sitio donde están los servidores solo abre con credencial y se registra cada entrada.", "7.2", ["7.4", "7.3", "7.6"], "7.2 controla quién ingresa a instalaciones seguras.");
+ctl("El equipo se suscribe a fuentes externas y resume cada semana las amenazas nuevas relevantes para la empresa.", "5.7", ["5.6", "5.5", "5.25"], "Recopilar y analizar información sobre amenazas es inteligencia de amenazas, control nuevo.");
+ctl("Hay un buzón para que cualquier persona informe con facilidad un evento sospechoso.", "6.8", ["5.26", "5.25", "5.6"], "Reporte de eventos de seguridad es un control de personas.");
+
+/* 9.1 Indicadores */
+add("ind", "¿Qué manda determinar 9.1 a)?", ["Lo que debe monitorearse y medirse, incluidos procesos y controles de seguridad", "Solo los incidentes", "Solo la satisfacción del cliente", "Solo el cumplimiento legal"], 0, "Después se definen métodos, cuándo medir, quién mide, cuándo analizar y quién evalúa.", "9.1");
+add("ind", "Los métodos de medición de 9.1 b) deben producir resultados:", ["Comparables y reproducibles", "Siempre favorables", "Aprobados por el certificador", "Solo cualitativos"], 0, "Si hoy hay 20 tickets y repites la medición y salen 21, el método no es reproducible.", "9.1 b");
+add("ind", "¿Qué cláusula pide evaluar el desempeño de la seguridad y la eficacia del SGSI?", ["9.1", "9.2", "9.3", "10.1"], 0, "9.1 Seguimiento, medición, análisis y evaluación.", "9.1");
+add("ind", "Un indicador de DESEMPEÑO mide:", ["Si un proceso o control se ejecutó (tiene inicio y fin), por ejemplo el % de equipos con antivirus", "Si el control logró contener ataques", "El impacto sobre los objetivos estratégicos", "La satisfacción del auditor"], 0, "Desempeño es «se hizo». Efectividad es «funcionó».", "27004");
+add("ind", "Un indicador de EFECTIVIDAD mide:", ["Si se lograron resultados y su impacto sobre los objetivos de seguridad (riesgos, incidentes, personas)", "Solo cuántas tareas se terminaron", "Solo costos", "Solo tiempos de auditoría"], 0, "Los indicadores de efectividad se enfocan en riesgos, incidentes y personas.", "27004");
+function dpe(q, a, w) { add("ind", "Indicador: «" + q + "». ¿Es de desempeño o de efectividad?", ["Desempeño", "Efectividad"], a, w, "27004", true); }
+dpe("% de servidores con agente antimalware instalado", 0, "Mide si se instaló, no si protegió.");
+dpe("% de incidentes de malware contenidos antes de causar daño", 1, "Mide el resultado de la protección.");
+dpe("N.º de personas que completaron la capacitación anual", 0, "Mide asistencia, no aprendizaje.");
+dpe("% de empleados que caen en un simulacro de phishing", 1, "Mide si la capacitación cambió el comportamiento.");
+dpe("% de sistemas con backup configurado", 0, "Mide si está configurado.");
+dpe("% de restauraciones exitosas al probar el backup", 1, "Mide si el backup sirve.");
+dpe("N.º de vulnerabilidades parchadas dentro del plazo", 0, "Mide cumplimiento del plazo.");
+dpe("N.º de vulnerabilidades que llegaron a explotarse", 1, "Mide si la gestión evitó incidentes reales.");
+dpe("% de portátiles con cifrado de disco", 0, "Es una tarea con inicio y fin.");
+dpe("N.º de accesos indebidos detectados y bloqueados a tiempo", 1, "Mide el efecto del control de acceso.");
+function niv(q, a, w) { add("ind", "Indicador: «" + q + "». ¿A qué nivel del cuadro de mando pertenece?", ["Operativo", "Táctico", "Estratégico"], a, w, "Práctica habitual", true); }
+niv("N.º de cuentas con MFA activado", 0, "El detalle de ejecución es operativo.");
+niv("Presupuesto de seguridad ejecutado en el trimestre", 1, "Lo gestiona el jefe del área de seguridad: nivel táctico.");
+niv("Índice de cultura de seguridad de toda la organización", 2, "Cubre toda la organización y se relaciona con los objetivos institucionales: lo revisa la alta dirección.");
+add("ind", "¿Quién revisa los indicadores estratégicos?", ["La alta dirección", "El equipo técnico", "El jefe de TI", "El proveedor"], 0, "Operativos: equipo técnico. Tácticos: jefe de seguridad. Estratégicos: alta dirección.", "Práctica habitual");
+add("ind", "Un tablero marca 100 % de equipos protegidos, pero la consola solo cuenta los que se registran a mano y el inventario real es mayor. ¿Qué problema tiene el indicador?", ["La fuente de datos no es completa y el 100 % puede ser falso; conviene un descubrimiento automático", "Ninguno, 100 % es cumplimiento total", "Debe pasar a ser estratégico", "Debe medirse todos los días"], 0, "Una fuente de datos poco confiable invalida el indicador. Es un hallazgo típico.", "Práctica habitual");
+add("ind", "En la ficha de un indicador, los umbrales tipo semáforo definen:", ["Cuándo el resultado es aceptable, de alerta o crítico", "La fórmula de cálculo", "Quién es el responsable", "La fuente de datos"], 0, "Los umbrales deben exigir. En seguridad conviene exigir verde por encima de 90 %.", "Práctica habitual");
+
+/* 9.2 Auditoría interna y 19011 */
+add("aud", "En 9.2 el sujeto que debe llevar a cabo las auditorías internas es:", ["La organización", "La alta dirección", "El certificador", "El oficial de seguridad"], 0, "9.2.1: la organización, a intervalos planificados. En 9.3 sí es la alta dirección. Es una trampa frecuente.", "9.2.1");
+add("aud", "¿Qué debe verificar la auditoría interna de 9.2?", ["Que el SGSI se ajuste a los requisitos propios de la organización y a los de la norma, y que esté implementado y mantenido de forma efectiva", "Solo los requisitos de la norma", "Solo los controles del Anexo A", "Solo los indicadores"], 0, "Son dos referencias: lo que dice la norma y lo que se exigió la propia organización.", "9.2.1");
+add("aud", "Según 9.2.2 el programa de auditoría debe considerar:", ["La importancia de los procesos y los resultados de auditorías anteriores", "Solo la disponibilidad de auditores", "Solo el presupuesto", "Solo el calendario del certificador"], 0, "Por eso en una auditoría de seguimiento se revisan primero los hallazgos previos.", "9.2.2");
+add("aud", "Para cada auditoría, 9.2.2 manda definir:", ["Criterios y alcance", "Solo la fecha", "Solo el auditor líder", "Solo la lista de verificación"], 0, "a) Criterios de auditoría y alcance de cada auditoría.", "9.2.2 a");
+add("aud", "9.2.2 exige seleccionar auditores y realizar auditorías que garanticen:", ["Objetividad e imparcialidad", "Menor costo", "Mayor velocidad", "Experiencia comercial"], 0, "Por eso las auditorías cruzadas: nadie audita su propia área.", "9.2.2 b");
+add("aud", "Los resultados de las auditorías internas deben informarse a:", ["La dirección pertinente", "Solo al auditado", "Solo al certificador", "Solo a TI"], 0, "9.2.2 c.", "9.2.2 c");
+add("aud", "¿Qué debe estar disponible como evidencia de la implementación del programa y de los resultados de auditoría?", ["Información documentada", "Un video de la auditoría", "Una certificación externa", "El currículum de cada auditado"], 0, "Al final de 9.2.2.", "9.2.2");
+add("aud", "El conjunto de una o más auditorías planificadas para un periodo y un propósito específico es el:", ["Programa de auditoría", "Plan de auditoría", "Informe de auditoría", "Lista de verificación"], 0, "El programa es el calendario, por ejemplo dos auditorías al año.", "19011");
+add("aud", "La descripción de las actividades y los detalles acordados de UNA auditoría (alcance, objetivos, agenda) es el:", ["Plan de auditoría", "Programa de auditoría", "Alcance del SGSI", "Criterio de auditoría"], 0, "Ejemplo: 9:00 gerencia general, 9:30 compras.", "19011");
+add("aud", "Una organización decide hacer dos auditorías al año, en junio y en diciembre. Esa decisión forma parte del:", ["Programa de auditoría", "Plan de auditoría", "Informe de auditoría", "Hallazgo"], 0, "Programa = qué auditorías haré y cuándo. Plan = cómo será una de ellas.", "19011");
+add("aud", "Auditoría realizada por o en nombre de la propia organización:", ["Primera parte", "Segunda parte", "Tercera parte", "Ninguna"], 0, "La cláusula 9.2 trata auditorías de primera parte.", "19011", true);
+add("aud", "Un banco audita a su proveedor de centro de datos porque es crítico para sus clientes. Es una auditoría de:", ["Segunda parte", "Primera parte", "Tercera parte", "Ninguna"], 0, "Segunda parte son las que hacen partes interesadas, como clientes o entes de control.", "19011", true);
+add("aud", "Las auditorías de tercera parte son:", ["Las realizadas por organizaciones externas independientes que proporcionan certificación", "Las auditorías internas", "Las de partes interesadas como clientes", "Ninguna de las anteriores"], 0, "Ejemplos de certificadores: SGS, Bureau Veritas, AENOR.", "19011");
+add("aud", "La evidencia objetiva es:", ["Datos que respaldan la existencia o veracidad de algo; se obtiene por observación, medición, prueba u otros medios", "Una opinión del auditor", "Una declaración verbal del auditado sin soporte", "La lista de verificación"], 0, "Lo verificable y tangible.", "19011");
+add("aud", "Los criterios de auditoría son:", ["El conjunto de requisitos (norma, políticas, procedimientos, requisitos legales) contra los que se compara la evidencia objetiva", "Los hallazgos de la auditoría anterior", "Los objetivos del auditado", "El alcance"], 0, "La evidencia se compara contra los criterios y de ahí salen los hallazgos.", "19011");
+add("aud", "Los hallazgos de auditoría son:", ["El resultado de evaluar la evidencia recopilada frente a los criterios; indican conformidad o no conformidad", "La conclusión final del certificador", "Recomendaciones comerciales", "Las preguntas de la lista de verificación"], 0, "Si los criterios son legales, se habla de cumplimiento o incumplimiento.", "19011");
+add("aud", "El proceso de auditoría se define como:", ["Sistemático, independiente y documentado para obtener evidencia y evaluarla objetivamente", "Informal, interno y verbal", "Solo financiero", "Opcional y sin criterios"], 0, "Sistemático (tiene orden), independiente y documentado.", "19011");
+add("aud", "¿Quién es responsable del informe de auditoría?", ["El auditor líder", "El auditado", "La alta dirección", "El certificador"], 0, "Se apoya en su equipo, pero la responsabilidad es suya.", "19011");
+add("aud", "¿Cuál NO es contenido típico del informe de auditoría?", ["Una oferta comercial para el siguiente año", "Objetivos y alcance", "Criterios de auditoría", "Conclusiones de la auditoría"], 0, "Incluye objetivos, alcance, cliente, equipo auditor, fechas y lugares, criterios, hallazgos con evidencia y conclusiones.", "19011");
+add("aud", "Un auditor de TI no debería auditar el área de TI porque:", ["Pierde imparcialidad: sería juez y parte", "Cobra más", "No conoce los controles", "Siempre entra en conflicto con el CISO"], 0, "Puede auditar otra área, por ejemplo seguridad física.", "9.2.2 b");
+add("aud", "Al comenzar la auditoría, el auditor líder confirma con el auditado el alcance, el calendario y qué pasaría si hubiera que suspenderla. ¿En qué reunión ocurre?", ["Reunión de apertura", "Reunión de cierre", "Revisión por la dirección", "Reunión de seguimiento"], 0, "La apertura aclara alcance, métodos y condiciones de la auditoría.", "19011");
+add("aud", "Al terminar el trabajo en sitio, el auditor líder presenta los hallazgos y las conclusiones. ¿Qué más debe dejar claro en esa reunión?", ["Cómo seguirán las acciones correctivas y otras actividades posteriores", "El presupuesto del siguiente año", "Los salarios del equipo auditor", "Cómo certificarse"], 0, "El cierre incluye lo que ocurre después de la auditoría.", "19011");
+add("aud", "Durante una entrevista de auditoría conviene hacer preguntas:", ["Abiertas (¿cómo?, ¿quién?, ¿por qué?, ¿cuándo?, ¿dónde?)", "Solo cerradas de sí o no", "Inductivas que sugieran la respuesta", "Ninguna, solo observar"], 0, "Una pregunta cerrada («¿tiene metodología de riesgos?») termina la conversación. Una abierta deja ver cómo trabajan.", "19011");
+add("aud", "¿Cuál es una pregunta abierta?", ["¿Cómo gestiona el riesgo de seguridad de la información?", "¿Tiene metodología de riesgos?", "¿Hay política firmada?", "¿Cumple el control 5.1?"], 0, "Las otras tres se contestan con sí o no.", "19011");
+add("aud", "Las listas de verificación sirven para:", ["Asegurar que nada importante se pase por alto y dar continuidad a la auditoría", "Reemplazar el juicio del auditor", "Evitar pedir evidencia", "Sustituir el informe"], 0, "Son apoyo, sobre todo para auditores nuevos.", "19011");
+add("aud", "¿Quién asigna a cada miembro del equipo la responsabilidad de auditar procesos, actividades y funciones?", ["El auditor líder, consultando con el equipo", "El auditado", "El certificador", "El CISO"], 0, "No incluye desarrollar el programa de auditoría, que es de quien lo gestiona.", "19011");
+add("aud", "Una organización tiene un programa con tres auditorías al año. ¿Quién debería designar al auditor líder y a los auditores de cada una?", ["Quien gestiona el programa de auditoría", "El auditado", "El proveedor", "El CISO"], 0, "Designar el equipo es parte de la gestión del programa.", "19011");
+add("aud", "Los métodos para ejecutar auditorías son:", ["En sitio o remotas, con o sin interacción humana", "Solo en sitio", "Solo documentales", "Solo con herramientas automáticas"], 0, "Se combinan las dos dimensiones.", "19011");
+add("aud", "Un auditor de «mente abierta» es el que:", ["Está dispuesto a considerar ideas o puntos de vista alternativos", "Acepta todo lo que dice el auditado", "Evita pedir evidencia", "Decide antes de auditar"], 0, "Es uno de los comportamientos profesionales esperados.", "19011");
+add("aud", "La auditoría de certificación se repite cada tres años. Cada año el certificador hace una auditoría de:", ["Seguimiento", "Segunda parte", "Primera parte", "Venta"], 0, "Ciclo habitual: certificación, seguimiento anual y recertificación a los tres años.", "Práctica habitual");
+add("aud", "Coordinar la auditoría interna con la externa sirve para:", ["Encontrar y tratar hallazgos antes de la auditoría de certificación", "Evitar la auditoría externa", "Reemplazar la auditoría de tercera parte", "Reducir el alcance"], 0, "Llegar con hallazgos ya tratados es la mejor carta de presentación.", "Práctica habitual");
+add("aud", "La norma 27001 fija la frecuencia de las auditorías internas en:", ["Intervalos planificados que define la organización", "Cada seis meses", "Cada año", "Cada tres años"], 0, "Trimestral al empezar y anual con la madurez es una práctica habitual, no un requisito.", "9.2.1");
+add("aud", "¿Qué práctica ayuda a un auditor a prepararse antes de auditar un área que no conoce?", ["Pedir con anticipación organigrama, procesos y evidencia para entender el área", "Llegar sin información para ser imparcial", "Avisar solo el día de la auditoría", "Pedir solo declaraciones verbales"], 0, "Una hora de entrevista no alcanza para conocer toda un área.", "Práctica habitual");
+
+/* Clasifica el hallazgo */
+function hal(q, a, w, r) { add("hall", "Hallazgo: " + q, ["No conformidad", "Observación", "Oportunidad de mejora"], a, w, r || "", true); }
+hal("en la consola, 9 de 80 estaciones llevan más de 45 días sin agente antimalware; la política interna exige protección en todos los equipos.", 0, "Incumple un requisito propio y el control 8.7. Es no conformidad.", "A.8.7");
+hal("el monitoreo cumple y funciona, pero el equipo propone enriquecer las alertas con información de amenazas externas.", 2, "No incumple nada y se podría mejorar la eficacia del proceso.", "A.8.16");
+hal("la metodología exige revisar los riesgos cada año, la última revisión fue hace 11 meses y la siguiente ya tiene fecha.", 1, "Aún no incumple, pero podría convertirse en no conformidad si no se trata.");
+hal("el plan de recuperación de TIC lleva 13 meses sin probarse y la política interna exige una prueba cada seis meses.", 0, "Se pasó del plazo que la propia organización fijó.", "A.5.30");
+hal("los datos personales de clientes viajan sin cifrar entre la aplicación y la base de datos.", 0, "La exposición ya existe. Incumple el uso de criptografía.", "A.8.24");
+hal("4 de 12 expedientes de contratación no tienen evidencia de verificación de antecedentes.", 0, "Falta evidencia objetiva de un control que se declaró aplicar.", "A.6.1");
+hal("el personal comparte archivos de trabajo por cuentas personales de almacenamiento en la nube; no hay una regla escrita que lo prohíba.", 1, "No incumple un requisito documentado, pero puede convertirse en fuga de información.");
+hal("los registros de riesgos viven en hojas de cálculo por área; todo se cumple y se sugiere centralizarlos en una sola herramienta.", 2, "No hay incumplimiento. Es una mejora de eficacia.");
+hal("no existe un documento de alcance del SGSI.", 0, "4.3 exige que el alcance esté documentado.", "4.3");
+hal("un auditor de TI audita al área de TI.", 0, "Incumple objetividad e imparcialidad.", "9.2.2 b");
+hal("el tablero de riesgos luce desactualizado, pero la metodología sí define intervalos y se cumple.", 1, "El tablero está desactualizado, no la metodología. Si la metodología no se cumpliera, sería no conformidad.");
+hal("el acta de revisión por la dirección existe, pero no incluye los resultados de auditoría entre sus entradas.", 0, "9.3.2 d3 lo exige. El incumplimiento es parcial, por eso es menor.", "9.3.2");
+add("hall", "No existe ninguna evaluación de riesgos del SGSI. ¿La no conformidad es mayor o menor?", ["Mayor", "Menor"], 0, "Incumple por completo un requisito integral (6.1.2). Menor es cuando se cumple parcialmente.", "6.1.2", true);
+add("hall", "La evaluación de riesgos existe, pero 2 de 40 riesgos no tienen propietario. ¿La no conformidad es mayor o menor?", ["Mayor", "Menor"], 1, "El requisito se cumple casi del todo y falla en detalles. Es menor.", "6.1.2 c", true);
+
+/* No conformidades: redacción y ciclo */
+add("nc", "Los tres elementos para redactar una no conformidad son:", ["Evidencia, referencia al requisito incumplido y conclusión", "Riesgo, impacto y recomendación", "Causa, efecto y plan de acción", "Objetivo, alcance y criterio"], 0, "Se dice qué se encontró, qué requisito se incumple y se concluye.", "Práctica habitual");
+add("nc", "Después de clasificar una no conformidad como mayor o menor, el siguiente paso del ciclo es:", ["Investigar la causa raíz", "Cerrar la no conformidad", "Aprobar el plan de acción", "Presentar el informe al certificador"], 0, "El ciclo: identificar, redactar, clasificar, causa raíz, acción, aprobar el plan, verificar efectividad, cerrar.", "10.2");
+add("nc", "La técnica que pregunta «¿por qué?» de forma sucesiva hasta llegar a la causa raíz es:", ["Cinco porqués", "FODA", "PESTEL", "RACI"], 0, "A veces la causa raíz es presupuesto y no descuido operativo.", "Práctica habitual");
+add("nc", "El diagrama de Ishikawa (espina de pescado) sirve para:", ["Analizar causas desde distintas categorías hasta ubicar la causa raíz", "Calcular el riesgo", "Medir indicadores", "Planificar la auditoría"], 0, "Es otra herramienta habitual de análisis de causa raíz.", "Práctica habitual");
+add("nc", "Hallazgo: 9 de 80 estaciones llevan semanas sin protección antimalware. ¿Qué control cita la no conformidad?", ["8.7 Protección contra malware", "6.1 Verificación de antecedentes", "7.4 Monitoreo físico", "5.30 Continuidad"], 0, "Cita el control que más se apega al hallazgo.", "A.8.7");
+add("nc", "Hallazgo: 4 de 12 expedientes de contratación sin validación de antecedentes. Control citado:", ["6.1", "8.7", "5.9", "7.2"], 0, "En 2013 era A.7.1.1. En 2022 es A.6.1.", "A.6.1");
+add("nc", "Hallazgo: los datos personales de clientes viajan por la red interna sin cifrar entre la aplicación y la base de datos. Control más relacionado:", ["8.24 Uso de criptografía", "8.7 Protección contra malware", "6.1 Verificación de antecedentes", "7.4 Monitoreo físico"], 0, "También se relaciona con la seguridad de redes, pero el que mejor calza es el de criptografía.", "A.8.24");
+add("nc", "¿Cuál es la mejor redacción de una no conformidad?", ["El área de TI no hace bien los backups.", "En la revisión de 10 servidores críticos se evidenció que 4 no tienen copia de seguridad en los últimos 30 días, incumpliendo el control 8.13 y la política de respaldos que exige copia diaria.", "Se recomienda mejorar los backups.", "Hay desorden en los respaldos."], 1, "Tiene evidencia objetiva, referencia al requisito y conclusión. Las otras son opiniones o recomendaciones.", "Práctica habitual");
+add("nc", "El auditor verifica la efectividad del plan de acción antes de:", ["Cerrar la no conformidad", "Redactarla", "Clasificarla", "Identificarla"], 0, "El ciclo termina con la verificación y el cierre.", "10.2 d");
+add("nc", "Para evitar disputas con el auditado sobre qué se incumple, conviene:", ["Citar el control que más se apega al hallazgo y mostrar la evidencia objetiva", "Citar muchos controles a la vez", "No citar ningún control", "Usar lenguaje subjetivo"], 0, "Un control poco relacionado abre una discusión de criterios.", "Práctica habitual");
+
+/* 9.3 y 10 */
+add("rev", "¿Quién revisa el SGSI a intervalos planificados para asegurar su idoneidad, adecuación y eficacia continuas (9.3)?", ["La alta dirección", "El auditor interno", "El certificador", "El oficial de seguridad"], 0, "En 9.2 el sujeto es la organización; en 9.3, la alta dirección.", "9.3.1");
+add("rev", "¿Cuál NO es entrada de la revisión por la dirección (9.3.2)?", ["Cotizaciones de proveedores de hardware", "Estado de las acciones de revisiones previas", "Resultados de auditoría y de monitoreo y medición", "Resultados de la evaluación de riesgos y estado del plan de tratamiento"], 0, "9.3.2 incluye acciones previas, cambios de contexto y partes interesadas, desempeño, retroalimentación, riesgos y oportunidades de mejora.", "9.3.2");
+add("rev", "Los resultados de la revisión por la dirección (9.3.3) incluyen decisiones sobre:", ["Oportunidades de mejora continua y necesidad de cambios en el SGSI", "Despidos", "Compra de certificaciones", "El alcance de la auditoría de certificación"], 0, "Y debe haber información documentada como evidencia.", "9.3.3");
+add("rev", "Entre las entradas de 9.3.2, la retroalimentación sobre el desempeño incluye tendencias en:", ["No conformidades y acciones correctivas, monitoreo y medición, resultados de auditoría y cumplimiento de objetivos", "Solo incidentes", "Solo costos", "Solo clientes"], 0, "Son cuatro tendencias.", "9.3.2 d");
+add("rev", "10.1 exige mejorar continuamente:", ["La idoneidad, adecuación y eficacia del SGSI", "Solo el cumplimiento legal", "Solo la rentabilidad", "Solo los controles técnicos"], 0, "Son las mismas tres palabras de 9.3.1.", "10.1");
+add("rev", "Ante una no conformidad, 10.2 pide en primer lugar:", ["Reaccionar: controlarla, corregirla y afrontar las consecuencias", "Despedir al responsable", "Cambiar el alcance", "Esperar la auditoría de certificación"], 0, "Después se evalúan las causas.", "10.2 a");
+add("rev", "Después de reaccionar, el orden de 10.2 es:", ["Evaluar la necesidad de eliminar causas, implementar acciones, revisar su efectividad y cambiar el SGSI si es necesario", "Cambiar el SGSI, implementar, evaluar", "Implementar, cerrar, evaluar", "Revisar efectividad, evaluar causas"], 0, "10.2 b a e.", "10.2");
+add("rev", "10.2 exige conservar información documentada sobre:", ["La naturaleza de las no conformidades y acciones tomadas, y los resultados de las acciones correctivas", "Solo el nombre del auditor", "Solo la fecha de cierre", "Nada"], 0, "10.2 f y g.", "10.2");
+add("rev", "Las acciones correctivas deben ser:", ["Apropiadas a los efectos de las no conformidades encontradas", "Iguales para todas", "Las más costosas", "Aprobadas por el certificador"], 0, "Proporcionales.", "10.2");
+
+/* Casos integradores */
+add("caso", "Un banco regional: «fuga de datos de clientes por falta de cifrado en tránsito sobre la base de datos de clientes». ¿Cuál es la vulnerabilidad?", ["Falta de cifrado en tránsito", "Fuga de datos", "Base de datos de clientes", "La Superintendencia de Bancos"], 0, "La fuga es la amenaza y la base de datos es el activo.", "6.1.2");
+add("caso", "En ese mismo escenario, ¿cuál es el activo?", ["Base de datos de clientes", "Falta de cifrado en tránsito", "Fuga de datos", "El CISO"], 0, "Activo + amenaza + vulnerabilidad.", "6.1.2");
+add("caso", "Un riesgo crítico queda en «alto» con los controles actuales y la organización solo acepta riesgos medios o bajos. ¿Qué corresponde?", ["Crear un plan de tratamiento: más controles o madurar los existentes", "Aceptarlo", "Cerrar la auditoría", "Cambiar la política"], 0, "El plan baja el riesgo hasta el residual aceptable.", "6.1.3");
+add("caso", "Una tienda en línea agrega MFA, pero deja cuentas de prueba activas y el riesgo baja poco. ¿Por qué?", ["La causa raíz sigue abierta: un control fuerte no compensa una debilidad que persiste", "El MFA no sirve", "El impacto subió", "La probabilidad no importa"], 0, "Al evaluar los controles en conjunto, una debilidad que persiste limita la reducción del riesgo.", "Práctica habitual");
+add("caso", "El proveedor de un banco sufre un ataque y envía malware. ¿Qué previsión contractual ayuda a reaccionar antes?", ["Una cláusula que obliga al proveedor a notificar incidentes de seguridad", "Cambiar el alcance", "Eliminar el control 5.19", "Auditar al proveedor con la cláusula 9.2"], 0, "Es seguridad dentro de los acuerdos con proveedores (5.20) y seguimiento (5.22).", "A.5.20");
+add("caso", "Objetivo de negocio: «aumentar 25 % las ventas por el sitio web». ¿Qué objetivo de seguridad es coherente?", ["Garantizar una disponibilidad del sitio de venta de al menos 99,9 % mensual", "Instalar un firewall", "Contratar un CISO", "Aprobar una política"], 0, "Primero el objetivo de negocio y de ahí se deriva el de seguridad, con un indicador medible.", "6.2");
+/* ---------- Teoría ---------- */
+const THEORY = [
+{ id: "t1", ref: "Examen", title: "El examen y cómo atacarlo", body: `
+<ul>
+<li><b>Formato habitual (verifícalo en CertiProf):</b> 40 preguntas, 1 hora, libro abierto en plataforma digital. Se aprueba con 80 % (32 aciertos).</li>
+<li><b>Peso:</b> buena parte de las preguntas suelen ser de auditoría (9.2, ISO 19011, hallazgos y no conformidades). Por eso el simulacro de esta página las pondera más.</li>
+<li><b>Tiempo:</b> un minuto y medio por pregunta. Responde lo que sabes, marca las dudosas y vuelve al final. Busca en el PDF de la norma solo con una palabra clave concreta.</li>
+<li><b>Descartes:</b> en «todas excepto…» o «solo A y C», parte de la opción que sabes falsa.</li>
+</ul>
+<div class="note"><b>Patrón que más se repite:</b> un término real de la norma puesto en la cláusula equivocada. Política es 5.2, objetivos 6.2, indicadores 9.1, auditoría interna 9.2 y revisión por la dirección 9.3.</div>` },
+
+{ id: "t2", ref: "Estructura", title: "Mapa de la norma: cláusulas 4 a 10", body: `
+<div class="tw"><table><thead><tr><th>Cláusula</th><th>Tema</th><th>Subcláusulas</th></tr></thead><tbody>
+<tr><td class="mono">4</td><td>Contexto</td><td>4.1 cuestiones · 4.2 partes interesadas · 4.3 alcance · 4.4 SGSI</td></tr>
+<tr><td class="mono">5</td><td>Liderazgo</td><td>5.1 liderazgo y compromiso · 5.2 política · 5.3 roles y autoridades</td></tr>
+<tr><td class="mono">6</td><td>Planificación</td><td>6.1.1 generalidades · 6.1.2 evaluación de riesgos · 6.1.3 tratamiento y SoA · 6.2 objetivos · 6.3 cambios</td></tr>
+<tr><td class="mono">7</td><td>Apoyo</td><td>7.1 recursos · 7.2 competencia · 7.3 conciencia · 7.4 comunicación · 7.5 información documentada</td></tr>
+<tr><td class="mono">8</td><td>Operación</td><td>8.1 control operativo · 8.2 evaluar riesgos · 8.3 tratar riesgos</td></tr>
+<tr><td class="mono">9</td><td>Evaluación</td><td>9.1 seguimiento y medición · 9.2 auditoría interna · 9.3 revisión por la dirección</td></tr>
+<tr><td class="mono">10</td><td>Mejora</td><td>10.1 mejora continua · 10.2 no conformidad y acción correctiva</td></tr>
+</tbody></table></div>
+<p><b>Quién es el sujeto.</b> Alta dirección: 5.1, 5.2, 5.3 y 9.3. La organización: 9.2 y la mayoría del resto. Propietarios de los riesgos: aprobar el plan y aceptar el riesgo residual (6.1.3 f).</p>
+<p class="mute small">Las cláusulas 1 a 3 son introductorias y no se certifican.</p>` },
+
+{ id: "t3", ref: "4.1 a 4.4", title: "Cláusula 4: contexto, partes interesadas y alcance", body: `
+<ul>
+<li><b>4.1:</b> determinar cuestiones externas e internas. Una práctica habitual: PESTEL para lo externo (amenazas y oportunidades) y FODA para lo interno (fortalezas y debilidades). En esta fase no se filtra nada.</li>
+<li><b>4.2:</b> partes interesadas relevantes, sus requisitos pertinentes y cuáles se abordarán con el SGSI. Los requisitos pueden ser legales, reglamentarios y contractuales. Distinción habitual: necesidad (obligatoria) y expectativa (deseo).</li>
+<li><b>4.3:</b> el alcance considera 4.1, 4.2 e interfaces y dependencias con otras organizaciones. Debe estar documentado.</li>
+<li><b>4.4:</b> establecer, implementar, mantener y mejorar continuamente el SGSI.</li>
+</ul>
+<div class="note good"><b>Idea útil:</b> el alcance no es lo mismo que el Anexo A. Lo que declaras en el alcance te obliga a identificar activos y riesgos. Para el resto usas los controles de la SoA como visión de cumplimiento.</div>` },
+
+{ id: "t4", ref: "5.1 a 5.3", title: "Cláusula 5: liderazgo, política y roles", body: `
+<ul>
+<li><b>5.1:</b> la alta dirección demuestra liderazgo y compromiso. Lista de la norma: política y objetivos compatibles con la estrategia, integración del SGSI en los procesos, recursos disponibles, comunicar la importancia, lograr los resultados previstos, dirigir y apoyar a las personas, promover la mejora continua y apoyar a otros roles gerenciales.</li>
+<li><b>5.2 contenido:</b> apropiada al propósito de la organización; incluye objetivos o el marco para fijarlos; compromiso de satisfacer los requisitos aplicables; compromiso de mejora continua.</li>
+<li><b>5.2 además:</b> estar documentada, comunicarse dentro de la organización y estar disponible para las partes interesadas según corresponda.</li>
+<li><b>5.3:</b> la alta dirección asegura que responsabilidades y autoridades de los roles de seguridad se asignen y comuniquen, y asigna responsabilidad para asegurar la conformidad del SGSI e informar su desempeño.</li>
+</ul>
+<div class="note"><b>Ojo con los resúmenes.</b> Algunos presentan «recursos, integración, comunicación y roles asignados» como las responsabilidades de 5.1. En la norma, «roles asignados y comunicados» es 5.3 y 5.1 tiene ocho puntos (a a h). Además, «comunicada» sí es un requisito de la política (5.2 f).</div>` },
+
+{ id: "t5", ref: "6.1 a 6.3", title: "Cláusula 6: riesgos, SoA y objetivos", body: `
+<ul>
+<li><b>6.1.2 evaluación:</b> definir criterios de aceptación del riesgo y criterios para evaluar; resultados consistentes, válidos y comparables; identificar riesgos y sus propietarios; analizar (consecuencias, probabilidad, nivel); evaluar y priorizar.</li>
+<li><b>Escenario de riesgo:</b> activo + amenaza + vulnerabilidad. Nivel = impacto × probabilidad.</li>
+<li><b>Niveles:</b> inherente (sin controles), actual (con controles existentes, no es un término de la norma), residual (tras el plan de tratamiento).</li>
+<li><b>Opciones de tratamiento:</b> reducir o mitigar, aceptar o retener, transferir o compartir, evitar.</li>
+<li><b>6.1.3 tratamiento:</b> elegir opciones, determinar controles necesarios, compararlos con el Anexo A, producir la SoA, formular el plan, y que los propietarios aprueben el plan y acepten el riesgo residual.</li>
+<li><b>SoA:</b> controles necesarios, justificación de inclusión, si están implementados o no, y justificación de exclusión de los del Anexo A.</li>
+<li><b>6.2 objetivos:</b> coherentes con la política, medibles si es factible, consideran requisitos y resultados del riesgo, monitoreados, comunicados, actualizados y documentados. Planificar qué, recursos, quién, cuándo y cómo evaluar.</li>
+<li><b>6.3 (nueva en 2022):</b> los cambios al SGSI se hacen de forma planificada.</li>
+</ul>
+<div class="note good"><b>Regla práctica:</b> los controles preventivos y detectivos bajan la probabilidad. Los correctivos, como un seguro, bajan el impacto.</div>` },
+
+{ id: "t6", ref: "7.1 a 8.3", title: "Cláusulas 7 y 8: apoyo y operación", body: `
+<ul>
+<li><b>7.1</b> recursos para establecer, implementar, mantener y mejorar el SGSI.</li>
+<li><b>7.2</b> competencia: educación, formación o experiencia, y evidencia documentada.</li>
+<li><b>7.3</b> conciencia: política, contribución al SGSI y consecuencias de incumplir.</li>
+<li><b>7.4</b> comunicación: qué, cuándo, con quién y cómo.</li>
+<li><b>7.5</b> información documentada: creación (identificación, formato, revisión y aprobación) y control (disponibilidad, protección, distribución, versiones, retención y disposición).</li>
+<li><b>8.1</b> planificar y controlar los procesos, controlar cambios y los procesos externalizados.</li>
+<li><b>8.2</b> evaluar riesgos a intervalos planificados o ante cambios significativos. <b>8.3</b> implementar el plan de tratamiento.</li>
+</ul>` },
+
+{ id: "t7", ref: "Anexo A", title: "Anexo A: 93 controles", body: `
+<ul>
+<li><b>4 temas:</b> A.5 organizacionales (37), A.6 personas (8), A.7 físicos (14), A.8 tecnológicos (34).</li>
+<li><b>Cambios 2022:</b> de 114 a 93. 56 controles de 2013 se fusionaron en 24, y hay 11 nuevos: 5.7, 5.23, 5.30, 7.4, 8.9, 8.10, 8.11, 8.12, 8.16, 8.23 y 8.28.</li>
+<li><b>Atributos (27002:2022):</b> preventivo, detectivo, correctivo. Por ejemplo, 8.16 es detectivo.</li>
+<li><b>Uso:</b> se determinan los controles que el tratamiento necesita, se comparan con el Anexo A y se justifica la SoA. La 27002 es la guía de cómo implementarlos.</li>
+</ul>
+<p class="small mute">Usa el buscador de abajo en la sección «Controles» para ubicar un control por número, nombre o bloque. Los nombres están abreviados y el texto oficial está en tu PDF de la norma.</p>` },
+
+{ id: "t8", ref: "9.1 y 27004", title: "Cláusula 9.1: seguimiento y medición", body: `
+<ul>
+<li>La organización determina qué medir (procesos y controles), los métodos (comparables y reproducibles), cuándo medir, quién mide, cuándo se analizan los resultados y quién los evalúa. Debe haber información documentada como evidencia.</li>
+<li><b>Desempeño:</b> tarea o control con inicio y fin («se hizo»). Ejemplo: % de equipos con antivirus.</li>
+<li><b>Efectividad:</b> si funcionó y logró los objetivos de seguridad; se enfoca en riesgos, incidentes y personas. Ejemplo: % de incidentes de malware contenidos antes de causar daño.</li>
+<li><b>Niveles del cuadro de mando:</b> operativo (equipo técnico), táctico (jefe de seguridad), estratégico (alta dirección).</li>
+<li><b>Ficha del indicador:</b> necesidad, medida, fórmula, frecuencia, tipo, umbrales tipo semáforo, responsables, fuente de datos y control relacionado.</li>
+<li>Un indicador de desempeño puede evolucionar a uno de efectividad. Cuida que la fuente de datos sea completa.</li>
+</ul>` },
+
+{ id: "t9", ref: "9.2 y 19011", title: "Auditoría interna (9.2) e ISO 19011", body: `
+<ul>
+<li><b>9.2.1:</b> la organización audita a intervalos planificados si el SGSI se ajusta a sus propios requisitos y a los de la norma, y se implementa y mantiene de forma efectiva.</li>
+<li><b>9.2.2 programa:</b> frecuencia, métodos, responsabilidades, planificación e informes; considera la importancia de los procesos y las auditorías previas; define criterios y alcance; selecciona auditores objetivos e imparciales; informa a la dirección pertinente; conserva información documentada.</li>
+<li><b>Programa vs plan:</b> programa = calendario de auditorías en un periodo. Plan = detalle de una auditoría.</li>
+<li><b>Tipos:</b> primera parte (interna, 9.2), segunda parte (clientes o entes de control), tercera parte (certificación).</li>
+<li><b>Conceptos:</b> evidencia objetiva, criterio de auditoría y hallazgo (conformidad o no conformidad). Una oportunidad de mejora no es una no conformidad.</li>
+<li><b>Roles:</b> quien gestiona el programa nombra al equipo. El auditor líder asigna responsabilidades al equipo y responde por el informe.</li>
+<li><b>Reuniones:</b> en la apertura se dan a conocer las condiciones para terminar la auditoría. En el cierre se presentan hallazgos y conclusiones y se explican las actividades posteriores.</li>
+<li><b>Entrevistas:</b> preguntas abiertas. Las listas de verificación apoyan, no reemplazan el juicio.</li>
+<li><b>Métodos:</b> en sitio o remotos, con o sin interacción humana.</li>
+<li><b>Informe:</b> objetivos, alcance, cliente, equipo y participantes, fechas y lugares, criterios, hallazgos con evidencia y conclusiones.</li>
+<li><b>Imparcialidad:</b> nadie audita su propia área. Auditorías cruzadas.</li>
+</ul>
+<div class="note"><b>Prácticas habituales que no son requisito de la norma:</b> que la alta dirección autorice el programa y frecuencias sugeridas (trimestral al empezar, anual con madurez).</div>` },
+
+{ id: "t10", ref: "Hallazgos y no conformidades", title: "Clasificar hallazgos y redactar no conformidades", body: `
+<div class="tw"><table><thead><tr><th>Hallazgo</th><th>Cuándo</th></tr></thead><tbody>
+<tr><td><b>No conformidad</b></td><td>Incumple un requisito de la norma o propio. Mayor: incumple por completo un requisito integral. Menor: incumple parcialmente.</td></tr>
+<tr><td><b>Observación</b></td><td>Aún no incumple, pero podría convertirse en no conformidad si no se trata.</td></tr>
+<tr><td><b>Oportunidad de mejora</b></td><td>No hay incumplimiento. Mejoraría la eficacia del proceso.</td></tr>
+</tbody></table></div>
+<p><b>Fórmula de redacción:</b> evidencia objetiva (qué y cuánto se encontró), referencia al requisito incumplido (cláusula, control o documento propio) y conclusión.</p>
+<p><b>Ejemplo:</b> «En la consola se evidenció que 15 de 120 estaciones no tienen antivirus desde hace más de 60 días, incumpliendo el control 8.7 y la política que exige antivirus en todos los equipos.»</p>
+<p><b>Ciclo:</b> identificar, redactar, clasificar, investigar causa raíz (Ishikawa o cinco porqués), definir acción, aprobar el plan, verificar la efectividad y cerrar. 10.2: reaccionar, evaluar causas, implementar, revisar efectividad y cambiar el SGSI si es necesario.</p>
+<p>Cita el control que más se apega al hallazgo para evitar disputas.</p>` },
+
+{ id: "t11", ref: "9.3, 10.1 y 10.2", title: "Revisión por la dirección y mejora", body: `
+<ul>
+<li><b>9.3.1:</b> la alta dirección revisa el SGSI a intervalos planificados para asegurar su idoneidad, adecuación y eficacia continuas.</li>
+<li><b>9.3.2 entradas:</b> estado de acciones previas; cambios en cuestiones y en partes interesadas; desempeño (no conformidades, monitoreo y medición, auditorías, objetivos); retroalimentación de partes interesadas; resultados de riesgos y estado del plan de tratamiento; oportunidades de mejora.</li>
+<li><b>9.3.3 resultados:</b> decisiones sobre mejora continua y cambios en el SGSI, con evidencia documentada.</li>
+<li><b>10.1:</b> mejorar idoneidad, adecuación y eficacia.</li>
+<li><b>10.2:</b> reaccionar, evaluar causas, implementar, revisar efectividad y, si procede, cambiar el SGSI. Conservar evidencia de las no conformidades y de las acciones.</li>
+</ul>` },
+
+{ id: "t12", ref: "Familia 27000", title: "Qué norma usar para qué", body: `
+<div class="tw"><table><thead><tr><th>Norma</th><th>Uso</th></tr></thead><tbody>
+<tr><td class="mono">ISO/IEC 27000</td><td>Vocabulario y visión general</td></tr>
+<tr><td class="mono">ISO/IEC 27001</td><td>Requisitos del SGSI. Única certificable</td></tr>
+<tr><td class="mono">ISO/IEC 27002</td><td>Guía de implementación de los controles</td></tr>
+<tr><td class="mono">ISO/IEC 27003</td><td>Guía de implementación del SGSI</td></tr>
+<tr><td class="mono">ISO/IEC 27004</td><td>Medición, indicadores y métricas</td></tr>
+<tr><td class="mono">ISO/IEC 27005</td><td>Gestión de riesgos de seguridad de la información</td></tr>
+<tr><td class="mono">ISO/IEC 27006</td><td>Requisitos para organismos que auditan y certifican</td></tr>
+<tr><td class="mono">ISO 19011</td><td>Directrices para auditar sistemas de gestión</td></tr>
+<tr><td class="mono">ISO 22301</td><td>Continuidad del negocio: BIA, RTO, RPO, BCP</td></tr>
+</tbody></table></div>
+<p class="small mute">Marcos complementarios: TOGAF (arquitectura empresarial), NIST, CIS Controls y Magerit.</p>` },
+
+{ id: "t13", ref: "Verifica", title: "Diferencias que conviene verificar", body: `
+<ul>
+<li><b>Cuentas de la versión 2022.</b> 114 − 56 fusionados + 24 resultantes + 11 nuevos = 93. Si un material te da cifras por tema que no suman 56, no las memorices.</li>
+<li><b>Numeración.</b> Los números de control cambiaron entre 2013 y 2022. Por ejemplo, la inteligencia de amenazas es 5.7 y la verificación de antecedentes es 6.1 (antes A.7.1.1).</li>
+<li><b>Riesgo «actual».</b> Es un término de uso común en metodologías, no de la norma, que habla de riesgo y de riesgo residual.</li>
+<li><b>Resúmenes de cláusula 5.</b> Contrasta siempre con el texto: 5.1 tiene ocho puntos, los roles son 5.3 y la comunicación de la política es 5.2 f.</li>
+<li><b>Bancos de preguntas de terceros.</b> Si una respuesta no cuadra con la norma, confía en la norma y busca la cláusula exacta.</li>
+</ul>` }
+];
+/* ---------- Estado y almacenamiento ---------- */
+const KEY = "ruta27001";
+let S = { stats: {}, sims: [], checks: {} };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const view = $("#view");
+const LET = "ABCDEFGH";
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pct(n, d) { return d ? Math.round(100 * n / d) : 0; }
+function record(q, ok) { const s = S.stats[q.id] || (S.stats[q.id] = { ok: 0, ko: 0, last: null }); if (ok) s.ok++; else s.ko++; s.last = ok; }
+function mastery(t) {
+  const qs = BANK.filter(q => t === "all" || q.t === t);
+  const seen = qs.filter(q => S.stats[q.id]).length;
+  const good = qs.filter(q => S.stats[q.id] && S.stats[q.id].last === true).length;
+  return { total: qs.length, seen, good };
+}
+function makeSession(qs, mode, limitSec) {
+  return { qs: qs.map(q => ({ q, order: q.fix ? q.o.map((_, i) => i) : shuffle(q.o.map((_, i) => i)) })), i: 0, ans: {}, flag: {}, mode, t0: Date.now(), limit: limitSec || 0, done: false };
+}
+
+/* ---------- Navegación ---------- */
+const NAV = [["inicio", "Inicio"], ["teoria", "Teoría"], ["practica", "Práctica"], ["banco", "Banco"], ["simulacro", "Simulacro"], ["errores", "Mis errores"]];
+$("#idx").innerHTML = NAV.map((n, i) => `<button data-v="${n[0]}"><span class="n">0${i + 1}</span>${n[1]}</button>`).join("");
+$("#idx").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { sess = null; stopTimer(); location.hash = b.dataset.v; } });
+let sess = null, timer = null;
+function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+function route() {
+  const v = (location.hash || "#inicio").slice(1);
+  const name = NAV.some(n => n[0] === v) ? v : "inicio";
+  document.querySelectorAll("#idx button").forEach(b => b.setAttribute("aria-current", b.dataset.v === name ? "page" : "false"));
+  if (name !== "simulacro" && name !== "banco" && name !== "practica") { sess = null; stopTimer(); }
+  ({ inicio: vInicio, teoria: vTeoria, practica: vPractica, banco: vBanco, simulacro: vSim, errores: vErrores })[name]();
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", () => { if (sess && !sess.done) { /* mantiene la sesión si se vuelve a la misma vista */ } route(); });
+
+/* ---------- Inicio ---------- */
+const PLAN = [
+  ["Día 1", "Teoría: examen, mapa de la norma, cláusulas 4 y 5. Banco: Fundamentos, 4 y 5."],
+  ["Día 2", "Teoría: cláusula 6. Práctica: casos integradores. Banco: cláusula 6."],
+  ["Día 3", "Cláusulas 7 y 8 y Anexo A. Práctica: evidencia ↔ control."],
+  ["Día 4", "9.1 e indicadores. Práctica: desempeño o efectividad."],
+  ["Día 5", "9.2 e ISO 19011. Banco: Auditoría. Es el tema más pesado."],
+  ["Día 6", "Hallazgos, no conformidades, 9.3 y 10. Repasa Mis errores."],
+  ["Día 7", "Dos simulacros. Meta: 90 % o más. Repite lo fallado."]
+];
+function vInicio() {
+  const m = mastery("all");
+  const last = S.sims[S.sims.length - 1];
+  const rows = Object.keys(TEMAS).map(t => { const x = mastery(t); return `<tr><td>${TEMAS[t]}</td><td class="mono">${x.good}/${x.total}</td><td style="width:34%"><div class="bar ${x.good === x.total && x.total ? "ok" : ""}"><i style="width:${pct(x.good, x.total)}%"></i></div></td></tr>`; }).join("");
+  view.innerHTML = `
+  <section class="sheet"><div class="row sp"><div><h2>Tu avance</h2><p class="mute small">Dominada = acertaste la última vez que respondiste esa pregunta.</p></div>
+  <div><span class="big">${pct(m.good, m.total)}%</span> <span class="mute small">${m.good} de ${m.total} dominadas · ${m.seen} vistas</span></div></div>
+  <div class="tw" style="margin-top:8px"><table><thead><tr><th>Tema</th><th>Dominadas</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></section>
+  <section class="sheet"><div class="row sp"><h2>Último simulacro</h2>${last ? `<span class="mono">${last.score}/${last.total} · ${pct(last.score, last.total)}% · ${last.pass ? "aprobado" : "no aprobado"}</span>` : `<span class="mute">Aún no has hecho ninguno</span>`}</div>
+  <div class="row" style="margin-top:12px"><button class="btn" data-go="simulacro">Hacer un simulacro</button><button class="btn ghost" data-go="teoria">Repasar teoría</button><button class="btn ghost" data-go="errores">Ver mis errores</button></div></section>
+  <section class="sheet"><h2>Ruta de 7 días</h2><p class="mute small">Marca cada día cuando lo cumplas.</p>
+  ${PLAN.map((p, i) => `<div class="day"><b>${p[0]}</b><label><input type="checkbox" id="chk${i}" data-i="${i}" ${S.checks[i] ? "checked" : ""}><span>${p[1]}</span></label></div>`).join("")}</section>
+  <section class="sheet"><h3>Sobre este material</h3><p class="small mute">Las preguntas son originales y están redactadas a partir de la norma ISO/IEC 27001:2022. No incluyen preguntas de exámenes reales ni material de ningún curso. Es material de estudio no oficial y no está afiliado a ISO ni a CertiProf. Para el texto autorizado de las normas, consulta las normas originales.</p></section>`;
+  view.onclick = e => {
+    const g = e.target.closest("[data-go]"); if (g) location.hash = g.dataset.go;
+  };
+  view.onchange = e => { const c = e.target.closest("input[data-i]"); if (c) { S.checks[c.dataset.i] = c.checked; save(); } };
+}
+
+/* ---------- Teoría ---------- */
+function vTeoria() {
+  view.innerHTML = THEORY.map((t, i) => `<details class="card" ${i === 0 ? "open" : ""}><summary><span>${esc(t.title)}</span><span class="tag">${esc(t.ref)}</span></summary><div class="body">${t.body}</div></details>`).join("") +
+  `<section class="sheet" id="ctrls"><h2>Controles del Anexo A</h2>
+  <div class="row" style="margin:10px 0"><input type="search" id="cq" placeholder="Número, palabra o tema" aria-label="Buscar control" style="flex:1 1 220px"></div>
+  <div class="row" id="cb" style="margin-bottom:10px">${BLOQUES.map((b, i) => `<button class="chip" data-b="${i}" aria-pressed="false">${b[0]}</button>`).join("")}</div>
+  <div class="tw"><table><thead><tr><th>Control</th><th>Nombre</th><th>Tema</th></tr></thead><tbody id="cl"></tbody></table></div>
+  <p class="small mute" id="cc"></p></section>`;
+  let blk = -1;
+  const draw = () => {
+    const q = $("#cq").value.trim().toLowerCase();
+    const list = CTRL.filter(c => (blk < 0 || BLOQUES[blk][1].includes(c.id)) && (!q || (c.id + " " + c.name + " " + TEMAS_A[c.id[0]]).toLowerCase().includes(q)));
+    $("#cl").innerHTML = list.map(c => `<tr><td class="mono">A.${c.id}${c.nuevo ? ' <span class="tag new">nuevo</span>' : ""}</td><td>${esc(c.name)}</td><td class="mute">${TEMAS_A[c.id[0]]}</td></tr>`).join("");
+    $("#cc").textContent = list.length + " de 93 controles";
+  };
+  $("#cq").oninput = draw;
+  $("#cb").onclick = e => { const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.b; blk = blk === i ? -1 : i; document.querySelectorAll("#cb button").forEach(x => x.setAttribute("aria-pressed", String(+x.dataset.b === blk))); draw(); };
+  draw();
+  view.onclick = null; view.onchange = null;
+}
+
+/* ---------- Sesiones de preguntas (estudio y simulacro) ---------- */
+function qCard(s, opts) {
+  const it = s.qs[s.i], q = it.q, ans = s.ans[s.i], study = s.mode === "study", shown = study && ans !== undefined;
+  const optsHtml = it.order.map((oi, k) => {
+    let cls = "opt";
+    if (shown) { if (oi === q.a) cls += " ok"; else if (ans === oi) cls += " ko"; }
+    else if (ans === oi) cls += " sel";
+    return `<button class="${cls}" data-o="${oi}" ${shown ? "disabled" : ""}><span class="l">${LET[k]}</span><span>${esc(q.o[oi])}</span></button>`;
+  }).join("");
+  const fb = shown ? `<div class="fb ${ans === q.a ? "ok" : "ko"}"><b>${ans === q.a ? "Correcto." : "Incorrecto."}</b> ${esc(q.w)} ${q.r ? `<span class="tag">${esc(q.r)}</span>` : ""}</div>` : "";
+  return `<div class="row sp"><span class="tag">${esc(TEMAS[q.t])}</span><span class="mono mute">${s.i + 1} / ${s.qs.length}</span></div>
+  <p class="qtext">${esc(q.q)}</p><div class="opts">${optsHtml}</div>${fb}`;
+}
+function renderSession(host, backLabel) {
+  const s = sess;
+  if (s.done) return renderResult(host, backLabel);
+  const study = s.mode === "study";
+  const answered = Object.keys(s.ans).length;
+  let head = "";
+  if (!study) {
+    head = `<div class="row sp"><span class="timer" id="clk"></span><span class="mono mute">${answered}/${s.qs.length} respondidas</span></div>
+    <div class="qgrid" style="margin:10px 0 14px">${s.qs.map((_, i) => `<button data-n="${i}" class="${s.ans[i] !== undefined ? "done" : ""} ${s.flag[i] ? "flag" : ""} ${i === s.i ? "cur" : ""}">${i + 1}</button>`).join("")}</div>`;
+  }
+  const canNext = study ? s.ans[s.i] !== undefined : true;
+  const last = s.i === s.qs.length - 1;
+  host.innerHTML = `<section class="sheet">${head}${qCard(s)}
+  <div class="row sp" style="margin-top:16px"><div class="row">
+    <button class="btn ghost sm" data-a="prev" ${s.i === 0 ? "disabled" : ""}>Anterior</button>
+    ${study ? "" : `<button class="btn ghost sm" data-a="flag">${s.flag[s.i] ? "Quitar marca" : "Marcar para revisar"}</button>`}</div>
+  <div class="row">${study ? `<button class="btn ghost sm" data-a="quit">Salir</button>` : ""}
+    ${last ? `<button class="btn" data-a="finish" ${canNext ? "" : "disabled"}>Terminar</button>` : `<button class="btn" data-a="next" ${canNext ? "" : "disabled"}>Siguiente</button>`}</div></div></section>`;
+  host.onclick = e => {
+    const o = e.target.closest(".opt");
+    if (o && !o.disabled) {
+      const oi = +o.dataset.o, q = s.qs[s.i].q;
+      if (study) { if (s.ans[s.i] !== undefined) return; s.ans[s.i] = oi; record(q, oi === q.a); save(); renderSession(host, backLabel); return; }
+      s.ans[s.i] = oi; renderSession(host, backLabel); return;
+    }
+    const n = e.target.closest("[data-n]"); if (n) { s.i = +n.dataset.n; renderSession(host, backLabel); return; }
+    const a = e.target.closest("[data-a]"); if (!a) return;
+    const act = a.dataset.a;
+    if (act === "next") s.i++; else if (act === "prev") s.i--; else if (act === "flag") s.flag[s.i] = !s.flag[s.i];
+    else if (act === "quit") { sess = null; route(); return; }
+    else if (act === "finish") { finish(); renderSession(host, backLabel); return; }
+    renderSession(host, backLabel);
+  };
+  if (!study) tick();
+}
+function finish() {
+  const s = sess; s.done = true; stopTimer();
+  s.score = s.qs.reduce((n, it, i) => n + (s.ans[i] === it.q.a ? 1 : 0), 0);
+  s.secs = Math.round((Date.now() - s.t0) / 1000);
+  if (s.mode === "sim") {
+    s.qs.forEach((it, i) => record(it.q, s.ans[i] === it.q.a));
+    S.sims.push({ date: new Date().toISOString().slice(0, 10), score: s.score, total: s.qs.length, secs: s.secs, pass: pct(s.score, s.qs.length) >= 80 }); save();
+  } else save();
+}
+function renderResult(host, backLabel) {
+  const s = sess, p = pct(s.score, s.qs.length), pass = p >= 80;
+  const by = {};
+  s.qs.forEach((it, i) => { const t = it.q.t; by[t] = by[t] || [0, 0]; by[t][1]++; if (s.ans[i] === it.q.a) by[t][0]++; });
+  const mm = Math.floor(s.secs / 60), ss = String(s.secs % 60).padStart(2, "0");
+  const wrong = s.qs.map((it, i) => ({ it, i })).filter(x => s.ans[x.i] !== x.it.q.a);
+  host.innerHTML = `<section class="sheet"><div class="row sp"><div><h2>${s.mode === "sim" ? "Resultado del simulacro" : "Resultado"}</h2><p class="mute small">Tiempo: ${mm}:${ss}. Se aprueba con 80 %.</p></div>
+  <div><span class="big" style="color:var(--${pass ? "ok" : "ko"})">${p}%</span> <span class="mono mute">${s.score}/${s.qs.length}</span></div></div>
+  <div class="tw" style="margin-top:10px"><table><thead><tr><th>Tema</th><th>Aciertos</th></tr></thead><tbody>${Object.keys(by).map(t => `<tr><td>${TEMAS[t]}</td><td class="mono">${by[t][0]}/${by[t][1]}</td></tr>`).join("")}</tbody></table></div>
+  <div class="row" style="margin-top:14px"><button class="btn" data-a="again">${wrong.length ? "Repetir solo lo fallado" : "Hacer otra ronda"}</button><button class="btn ghost" data-a="back">${esc(backLabel)}</button></div></section>
+  ${wrong.length ? `<section class="sheet"><h3>Lo que fallaste (${wrong.length})</h3>${wrong.map(x => { const q = x.it.q, a = s.ans[x.i]; return `<div class="fb ko" style="margin-top:10px"><p style="margin:0 0 6px"><b>${esc(q.q)}</b></p><p class="small" style="margin:0">Tu respuesta: ${a === undefined ? "sin responder" : esc(q.o[a])}</p><p class="small" style="margin:0"><b>Correcta:</b> ${esc(q.o[q.a])}</p><p class="small" style="margin:4px 0 0">${esc(q.w)} ${q.r ? `<span class="tag">${esc(q.r)}</span>` : ""}</p></div>`; }).join("")}</section>` : ""}`;
+  host.onclick = e => {
+    const a = e.target.closest("[data-a]"); if (!a) return;
+    if (a.dataset.a === "back") { sess = null; route(); return; }
+    if (a.dataset.a === "again") { const pool = wrong.length ? wrong.map(x => x.it.q) : s.qs.map(it => it.q); sess = makeSession(shuffle(pool), "study"); renderSession(view, backLabel); window.scrollTo(0, 0); }
+  };
+}
+function tick() {
+  stopTimer();
+  const s = sess; if (!s || s.mode !== "sim") return;
+  const upd = () => {
+    const left = Math.max(0, s.limit - Math.floor((Date.now() - s.t0) / 1000)), c = $("#clk"); if (!c) return;
+    c.textContent = String(Math.floor(left / 60)).padStart(2, "0") + ":" + String(left % 60).padStart(2, "0");
+    c.classList.toggle("low", left < 300);
+    if (left === 0) { finish(); renderSession(view, "Volver al simulacro"); }
+  };
+  upd(); timer = setInterval(upd, 1000);
+}
+
+/* ---------- Práctica ---------- */
+const SETS = [
+  ["Clasifica el hallazgo", "No conformidad, observación u oportunidad de mejora, y mayor o menor.", ["hall"]],
+  ["Evidencia ↔ control", "Dada una evidencia, identifica el control del Anexo A.", ["ctrl"]],
+  ["Indicadores", "Desempeño o efectividad, y nivel operativo, táctico o estratégico.", ["ind"]],
+  ["Redacta la no conformidad", "Elementos, control citado y ciclo de acción correctiva.", ["nc"]],
+  ["Riesgo y tratamiento", "Escenarios, opciones de tratamiento y SoA.", ["c6"]],
+  ["Casos integradores", "Un banco regional y una tienda en línea.", ["caso"]],
+  ["Auditoría y 19011", "Programa, plan, tipos, informe, reuniones y entrevistas.", ["aud"]]
+];
+function vPractica() {
+  if (sess && sess.mode === "study") { renderSession(view, "Volver a práctica"); return; }
+  view.innerHTML = `<section class="sheet"><h2>Práctica por tipo de ejercicio</h2><p class="mute small">Cada pregunta da la respuesta con su explicación al instante.</p></section>
+  <div class="grid">${SETS.map((x, i) => { const n = BANK.filter(q => x[2].includes(q.t)).length, m = mastery(x[2][0]); return `<div class="sheet"><h3>${x[0]}</h3><p class="small mute">${x[1]}</p><div class="bar" style="margin:10px 0"><i style="width:${pct(m.good, m.total)}%"></i></div><div class="row sp"><span class="mono small mute">${m.good}/${n} dominadas</span><button class="btn sm" data-s="${i}">Empezar</button></div></div>`; }).join("")}</div>`;
+  view.onclick = e => { const b = e.target.closest("[data-s]"); if (!b) return; const x = SETS[+b.dataset.s]; sess = makeSession(shuffle(BANK.filter(q => x[2].includes(q.t))), "study"); renderSession(view, "Volver a práctica"); window.scrollTo(0, 0); };
+}
+
+/* ---------- Banco ---------- */
+function vBanco() {
+  if (sess && sess.mode === "study") { renderSession(view, "Volver al banco"); return; }
+  let tema = "all", cant = "20", modo = "all";
+  const draw = () => {
+    view.innerHTML = `<section class="sheet"><h2>Banco de preguntas</h2><p class="mute small">${BANK.length} preguntas. Elige tema, cantidad y filtro.</p>
+    <div class="row" style="margin:12px 0">${["all"].concat(Object.keys(TEMAS)).map(t => { const m = mastery(t); return `<button class="chip" data-t="${t}" aria-pressed="${t === tema}">${t === "all" ? "Todos" : TEMAS[t]} <span class="mono small">${m.good}/${m.total}</span></button>`; }).join("")}</div>
+    <div class="row"><label class="small mute" for="bc">Cantidad</label><select id="bc"><option value="10">10</option><option value="20">20</option><option value="all">Todas</option></select>
+    <label class="small mute" for="bm">Filtro</label><select id="bm"><option value="all">Todas</option><option value="new">Solo no vistas</option><option value="ko">Solo falladas</option></select>
+    <button class="btn" id="go">Empezar</button></div><p class="small mute" id="avail" style="margin-top:10px"></p></section>`;
+    $("#bc").value = cant; $("#bm").value = modo;
+    const pool = () => BANK.filter(q => (tema === "all" || q.t === tema) && (modo === "all" || (modo === "new" ? !S.stats[q.id] : (S.stats[q.id] && S.stats[q.id].last === false))));
+    $("#avail").textContent = pool().length + " preguntas disponibles con este filtro.";
+    view.onclick = e => { const b = e.target.closest("[data-t]"); if (b) { tema = b.dataset.t; cant = $("#bc").value; modo = $("#bm").value; draw(); } };
+    $("#bc").onchange = e => { cant = e.target.value; }; $("#bm").onchange = e => { modo = e.target.value; draw(); };
+    $("#go").onclick = () => { let p = shuffle(pool()); if (!p.length) return; if (cant !== "all") p = p.slice(0, +cant); sess = makeSession(p, "study"); renderSession(view, "Volver al banco"); window.scrollTo(0, 0); };
+  };
+  draw();
+}
+
+/* ---------- Simulacro ---------- */
+const MIX = [["aud", 12], ["hall", 4], ["nc", 2], ["rev", 3], ["ind", 4], ["c6", 5], ["c4", 2], ["c5", 3], ["c78", 1], ["anexo", 2], ["ctrl", 2]];
+function vSim() {
+  if (sess && sess.mode === "sim") { renderSession(view, "Volver al simulacro"); return; }
+  const hist = S.sims.slice(-5).reverse();
+  view.innerHTML = `<section class="sheet"><h2>Simulacro de examen</h2>
+  <p>40 preguntas, 60 minutos, aprobación con 80 % (32 aciertos). Sin respuestas hasta el final. Más de un tercio son de auditoría, como en el examen real.</p>
+  <p class="small mute">El examen es de libro abierto: practica con el PDF de la norma a un lado y busca por palabra clave.</p>
+  <div class="row" style="margin-top:12px"><button class="btn" id="go">Iniciar simulacro</button></div></section>
+  ${hist.length ? `<section class="sheet"><h3>Tus últimos intentos</h3><div class="tw"><table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Tiempo</th></tr></thead><tbody>${hist.map(h => `<tr><td class="mono">${h.date}</td><td class="mono">${h.score}/${h.total} · ${pct(h.score, h.total)}%</td><td>${h.pass ? "Aprobado" : "No aprobado"}</td><td class="mono">${Math.floor(h.secs / 60)} min</td></tr>`).join("")}</tbody></table></div></section>` : ""}`;
+  view.onclick = null;
+  $("#go").onclick = () => {
+    let qs = [];
+    MIX.forEach(m => { qs = qs.concat(shuffle(BANK.filter(q => q.t === m[0])).slice(0, m[1])); });
+    sess = makeSession(shuffle(qs), "sim", 3600); renderSession(view, "Volver al simulacro"); window.scrollTo(0, 0);
+  };
+}
+
+/* ---------- Mis errores ---------- */
+function vErrores() {
+  const wrong = BANK.filter(q => S.stats[q.id] && S.stats[q.id].last === false);
+  if (!wrong.length) { view.innerHTML = `<section class="sheet"><h2>Mis errores</h2><p class="mute">Aquí aparecerán las preguntas que falles. Por ahora no tienes ninguna pendiente.</p></section>`; view.onclick = null; return; }
+  view.innerHTML = `<section class="sheet"><div class="row sp"><h2>Mis errores (${wrong.length})</h2><div class="row"><button class="btn sm" id="rep">Practicar estas</button><button class="btn ghost sm" id="cp">Copiar lista</button></div></div><p class="small mute" id="msg"></p></section>` +
+    wrong.map(q => `<section class="sheet"><span class="tag">${esc(TEMAS[q.t])}</span><p class="qtext" style="margin-top:8px">${esc(q.q)}</p><p class="small"><b>Correcta:</b> ${esc(q.o[q.a])}</p><p class="small mute">${esc(q.w)} ${q.r ? `<span class="tag">${esc(q.r)}</span>` : ""}</p></section>`).join("");
+  view.onclick = e => {
+    if (e.target.id === "rep") { sess = makeSession(shuffle(wrong), "study"); location.hash = "banco"; if ((location.hash || "") === "#banco") route(); }
+    if (e.target.id === "cp") {
+      const txt = wrong.map(q => "- " + q.q + "\n  Correcta: " + q.o[q.a]).join("\n");
+      const ok = () => { $("#msg").textContent = "Lista copiada."; };
+      const fb = () => { $("#msg").innerHTML = "No se pudo copiar. Selecciona y copia desde aquí:<br><textarea id=\"ta\" rows=\"8\" style=\"width:100%;margin-top:6px\"></textarea>"; $("#ta").value = txt; $("#ta").select(); };
+      try { navigator.clipboard.writeText(txt).then(ok, fb); } catch (er) { fb(); }
+    }
+  };
+}
+
+route();
+</script>
+
+</body>
+</html>
