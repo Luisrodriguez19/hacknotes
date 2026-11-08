@@ -120,7 +120,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
 <body>
 <div class="top">
   <h1>Ruta al examen ISO 27001</h1>
-  <p>Auditor interno ISO/IEC 27001:2022. Teoría, práctica con casos y simulacros de 40 preguntas, con tu progreso guardado en este navegador. Material de estudio no oficial.</p>
+  <p>Auditor interno ISO/IEC 27001:2022. Teoría, práctica con casos y simulacros de 40 preguntas, con tu avance guardado automáticamente. Material de estudio no oficial.</p>
 </div>
 <div class="shell">
   <nav class="idx" id="idx" aria-label="Secciones"></nav>
@@ -606,9 +606,20 @@ const THEORY = [
 ];
 /* ---------- Estado y almacenamiento ---------- */
 const KEY = "ruta27001";
-let S = { stats: {}, sims: [], checks: {} };
+let S = { stats: {}, sims: [], checks: {}, sess: null, updated: 0 };
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+let dbRef = null, saveT = null, pushing = false, pushAgain = false;
+function pushDb() {
+  if (!dbRef) return;
+  if (pushing) { pushAgain = true; return; }
+  pushing = true;
+  dbRef.set(JSON.parse(JSON.stringify(S))).catch(() => {}).then(() => { pushing = false; if (pushAgain) { pushAgain = false; pushDb(); } });
+}
+function save() {
+  S.updated = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  if (dbRef) { clearTimeout(saveT); saveT = setTimeout(pushDb, 800); }
+}
 const $ = (s, r) => (r || document).querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const view = $("#view");
@@ -622,21 +633,44 @@ function mastery(t) {
   const good = qs.filter(q => S.stats[q.id] && S.stats[q.id].last === true).length;
   return { total: qs.length, seen, good };
 }
-function makeSession(qs, mode, limitSec) {
-  return { qs: qs.map(q => ({ q, order: q.fix ? q.o.map((_, i) => i) : shuffle(q.o.map((_, i) => i)) })), i: 0, ans: {}, flag: {}, mode, t0: Date.now(), limit: limitSec || 0, done: false };
+function makeSession(qs, mode, limitSec, where) {
+  return { qs: qs.map(q => ({ q, order: q.fix ? q.o.map((_, i) => i) : shuffle(q.o.map((_, i) => i)) })), i: 0, ans: {}, flag: {}, mode, where: where || "banco", t0: Date.now(), limit: limitSec || 0, done: false };
+}
+function snapshot(s) {
+  return { mode: s.mode, where: s.where, ids: s.qs.map(x => x.q.id), orders: s.qs.map(x => x.order), i: s.i, ans: s.ans, flag: s.flag, limit: s.limit, elapsed: Math.floor((Date.now() - s.t0) / 1000) };
+}
+function restore(sn) {
+  if (!sn || !sn.ids) return null;
+  const byId = {}; BANK.forEach(q => byId[q.id] = q);
+  const qs = [];
+  for (let k = 0; k < sn.ids.length; k++) {
+    const q = byId[sn.ids[k]]; if (!q) return null;
+    let order = sn.orders && sn.orders[k];
+    if (!order || order.length !== q.o.length) order = q.o.map((_, j) => j);
+    qs.push({ q, order });
+  }
+  return { qs, i: Math.max(0, Math.min(sn.i || 0, qs.length - 1)), ans: sn.ans || {}, flag: sn.flag || {}, mode: sn.mode, where: sn.where || "banco", limit: sn.limit || 0, done: false, t0: Date.now() - (sn.elapsed || 0) * 1000 };
+}
+function persistSess() { if (sess && !sess.done) { S.sess = snapshot(sess); save(); } }
+function leaveSession() { persistSess(); sess = null; stopTimer(); }
+function resumeCard() {
+  const sn = S.sess; if (!sn || !sn.ids || sess) return "";
+  const n = sn.ids.length, a = Object.keys(sn.ans || {}).length;
+  const lbl = sn.mode === "sim" ? "Simulacro" : (sn.where === "practica" ? "Práctica" : "Banco");
+  return `<section class="sheet" style="border-color:var(--accent)"><div class="row sp"><div><h3>Tienes una sesión guardada</h3><p class="small mute" style="margin:2px 0 0">${lbl}: ${a} de ${n} respondidas, ibas en la pregunta ${(sn.i || 0) + 1}.${sn.mode === "sim" ? " El reloj quedó detenido." : ""}</p></div><div class="row"><button class="btn" data-res="go">Continuar</button><button class="btn ghost sm" data-res="drop">Descartar</button></div></div></section>`;
 }
 
 /* ---------- Navegación ---------- */
 const NAV = [["inicio", "Inicio"], ["teoria", "Teoría"], ["practica", "Práctica"], ["banco", "Banco"], ["simulacro", "Simulacro"], ["errores", "Mis errores"]];
 $("#idx").innerHTML = NAV.map((n, i) => `<button data-v="${n[0]}"><span class="n">0${i + 1}</span>${n[1]}</button>`).join("");
-$("#idx").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { sess = null; stopTimer(); location.hash = b.dataset.v; } });
+$("#idx").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { leaveSession(); location.hash = b.dataset.v; } });
 let sess = null, timer = null;
 function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
 function route() {
   const v = (location.hash || "#inicio").slice(1);
   const name = NAV.some(n => n[0] === v) ? v : "inicio";
   document.querySelectorAll("#idx button").forEach(b => b.setAttribute("aria-current", b.dataset.v === name ? "page" : "false"));
-  if (name !== "simulacro" && name !== "banco" && name !== "practica") { sess = null; stopTimer(); }
+  if (name !== "simulacro" && name !== "banco" && name !== "practica") { leaveSession(); }
   ({ inicio: vInicio, teoria: vTeoria, practica: vPractica, banco: vBanco, simulacro: vSim, errores: vErrores })[name]();
   window.scrollTo(0, 0);
 }
@@ -656,7 +690,7 @@ function vInicio() {
   const m = mastery("all");
   const last = S.sims[S.sims.length - 1];
   const rows = Object.keys(TEMAS).map(t => { const x = mastery(t); return `<tr><td>${TEMAS[t]}</td><td class="mono">${x.good}/${x.total}</td><td style="width:34%"><div class="bar ${x.good === x.total && x.total ? "ok" : ""}"><i style="width:${pct(x.good, x.total)}%"></i></div></td></tr>`; }).join("");
-  view.innerHTML = `
+  view.innerHTML = resumeCard() + `
   <section class="sheet"><div class="row sp"><div><h2>Tu avance</h2><p class="mute small">Dominada = acertaste la última vez que respondiste esa pregunta.</p></div>
   <div><span class="big">${pct(m.good, m.total)}%</span> <span class="mute small">${m.good} de ${m.total} dominadas · ${m.seen} vistas</span></div></div>
   <div class="tw" style="margin-top:8px"><table><thead><tr><th>Tema</th><th>Dominadas</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></section>
@@ -708,6 +742,7 @@ function qCard(s, opts) {
 function renderSession(host, backLabel) {
   const s = sess;
   if (s.done) return renderResult(host, backLabel);
+  persistSess();
   const study = s.mode === "study";
   const answered = Object.keys(s.ans).length;
   let head = "";
@@ -721,7 +756,7 @@ function renderSession(host, backLabel) {
   <div class="row sp" style="margin-top:16px"><div class="row">
     <button class="btn ghost sm" data-a="prev" ${s.i === 0 ? "disabled" : ""}>Anterior</button>
     ${study ? "" : `<button class="btn ghost sm" data-a="flag">${s.flag[s.i] ? "Quitar marca" : "Marcar para revisar"}</button>`}</div>
-  <div class="row">${study ? `<button class="btn ghost sm" data-a="quit">Salir</button>` : ""}
+  <div class="row">${study ? `<button class="btn ghost sm" data-a="quit">Guardar y salir</button>` : ""}
     ${last ? `<button class="btn" data-a="finish" ${canNext ? "" : "disabled"}>Terminar</button>` : `<button class="btn" data-a="next" ${canNext ? "" : "disabled"}>Siguiente</button>`}</div></div></section>`;
   host.onclick = e => {
     const o = e.target.closest(".opt");
@@ -734,7 +769,7 @@ function renderSession(host, backLabel) {
     const a = e.target.closest("[data-a]"); if (!a) return;
     const act = a.dataset.a;
     if (act === "next") s.i++; else if (act === "prev") s.i--; else if (act === "flag") s.flag[s.i] = !s.flag[s.i];
-    else if (act === "quit") { sess = null; route(); return; }
+    else if (act === "quit") { leaveSession(); route(); return; }
     else if (act === "finish") { finish(); renderSession(host, backLabel); return; }
     renderSession(host, backLabel);
   };
@@ -744,9 +779,10 @@ function finish() {
   const s = sess; s.done = true; stopTimer();
   s.score = s.qs.reduce((n, it, i) => n + (s.ans[i] === it.q.a ? 1 : 0), 0);
   s.secs = Math.round((Date.now() - s.t0) / 1000);
+  S.sess = null;
   if (s.mode === "sim") {
     s.qs.forEach((it, i) => record(it.q, s.ans[i] === it.q.a));
-    S.sims.push({ date: new Date().toISOString().slice(0, 10), score: s.score, total: s.qs.length, secs: s.secs, pass: pct(s.score, s.qs.length) >= 80 }); save();
+    S.sims.push({ date: new Date().toISOString().slice(0, 10), score: s.score, total: s.qs.length, secs: s.secs, pass: pct(s.score, s.qs.length) >= 80 }); if (S.sims.length > 40) S.sims.shift(); save();
   } else save();
 }
 function renderResult(host, backLabel) {
@@ -763,7 +799,7 @@ function renderResult(host, backLabel) {
   host.onclick = e => {
     const a = e.target.closest("[data-a]"); if (!a) return;
     if (a.dataset.a === "back") { sess = null; route(); return; }
-    if (a.dataset.a === "again") { const pool = wrong.length ? wrong.map(x => x.it.q) : s.qs.map(it => it.q); sess = makeSession(shuffle(pool), "study"); renderSession(view, backLabel); window.scrollTo(0, 0); }
+    if (a.dataset.a === "again") { const pool = wrong.length ? wrong.map(x => x.it.q) : s.qs.map(it => it.q); sess = makeSession(shuffle(pool), "study", 0, s.where || "banco"); renderSession(view, backLabel); window.scrollTo(0, 0); }
   };
 }
 function tick() {
@@ -775,7 +811,7 @@ function tick() {
     c.classList.toggle("low", left < 300);
     if (left === 0) { finish(); renderSession(view, "Volver al simulacro"); }
   };
-  upd(); timer = setInterval(upd, 1000);
+  let n = 0; upd(); timer = setInterval(() => { upd(); if (++n % 10 === 0) persistSess(); }, 1000);
 }
 
 /* ---------- Práctica ---------- */
@@ -790,9 +826,9 @@ const SETS = [
 ];
 function vPractica() {
   if (sess && sess.mode === "study") { renderSession(view, "Volver a práctica"); return; }
-  view.innerHTML = `<section class="sheet"><h2>Práctica por tipo de ejercicio</h2><p class="mute small">Cada pregunta da la respuesta con su explicación al instante.</p></section>
+  view.innerHTML = resumeCard() + `<section class="sheet"><h2>Práctica por tipo de ejercicio</h2><p class="mute small">Cada pregunta da la respuesta con su explicación al instante.</p></section>
   <div class="grid">${SETS.map((x, i) => { const n = BANK.filter(q => x[2].includes(q.t)).length, m = mastery(x[2][0]); return `<div class="sheet"><h3>${x[0]}</h3><p class="small mute">${x[1]}</p><div class="bar" style="margin:10px 0"><i style="width:${pct(m.good, m.total)}%"></i></div><div class="row sp"><span class="mono small mute">${m.good}/${n} dominadas</span><button class="btn sm" data-s="${i}">Empezar</button></div></div>`; }).join("")}</div>`;
-  view.onclick = e => { const b = e.target.closest("[data-s]"); if (!b) return; const x = SETS[+b.dataset.s]; sess = makeSession(shuffle(BANK.filter(q => x[2].includes(q.t))), "study"); renderSession(view, "Volver a práctica"); window.scrollTo(0, 0); };
+  view.onclick = e => { const b = e.target.closest("[data-s]"); if (!b) return; const x = SETS[+b.dataset.s]; sess = makeSession(shuffle(BANK.filter(q => x[2].includes(q.t))), "study", 0, "practica"); renderSession(view, "Volver a práctica"); window.scrollTo(0, 0); };
 }
 
 /* ---------- Banco ---------- */
@@ -800,7 +836,7 @@ function vBanco() {
   if (sess && sess.mode === "study") { renderSession(view, "Volver al banco"); return; }
   let tema = "all", cant = "20", modo = "all";
   const draw = () => {
-    view.innerHTML = `<section class="sheet"><h2>Banco de preguntas</h2><p class="mute small">${BANK.length} preguntas. Elige tema, cantidad y filtro.</p>
+    view.innerHTML = resumeCard() + `<section class="sheet"><h2>Banco de preguntas</h2><p class="mute small">${BANK.length} preguntas. Elige tema, cantidad y filtro.</p>
     <div class="row" style="margin:12px 0">${["all"].concat(Object.keys(TEMAS)).map(t => { const m = mastery(t); return `<button class="chip" data-t="${t}" aria-pressed="${t === tema}">${t === "all" ? "Todos" : TEMAS[t]} <span class="mono small">${m.good}/${m.total}</span></button>`; }).join("")}</div>
     <div class="row"><label class="small mute" for="bc">Cantidad</label><select id="bc"><option value="10">10</option><option value="20">20</option><option value="all">Todas</option></select>
     <label class="small mute" for="bm">Filtro</label><select id="bm"><option value="all">Todas</option><option value="new">Solo no vistas</option><option value="ko">Solo falladas</option></select>
@@ -810,7 +846,7 @@ function vBanco() {
     $("#avail").textContent = pool().length + " preguntas disponibles con este filtro.";
     view.onclick = e => { const b = e.target.closest("[data-t]"); if (b) { tema = b.dataset.t; cant = $("#bc").value; modo = $("#bm").value; draw(); } };
     $("#bc").onchange = e => { cant = e.target.value; }; $("#bm").onchange = e => { modo = e.target.value; draw(); };
-    $("#go").onclick = () => { let p = shuffle(pool()); if (!p.length) return; if (cant !== "all") p = p.slice(0, +cant); sess = makeSession(p, "study"); renderSession(view, "Volver al banco"); window.scrollTo(0, 0); };
+    $("#go").onclick = () => { let p = shuffle(pool()); if (!p.length) return; if (cant !== "all") p = p.slice(0, +cant); sess = makeSession(p, "study", 0, "banco"); renderSession(view, "Volver al banco"); window.scrollTo(0, 0); };
   };
   draw();
 }
@@ -820,8 +856,8 @@ const MIX = [["aud", 12], ["hall", 4], ["nc", 2], ["rev", 3], ["ind", 4], ["c6",
 function vSim() {
   if (sess && sess.mode === "sim") { renderSession(view, "Volver al simulacro"); return; }
   const hist = S.sims.slice(-5).reverse();
-  view.innerHTML = `<section class="sheet"><h2>Simulacro de examen</h2>
-  <p>40 preguntas, 60 minutos, aprobación con 80 % (32 aciertos). Sin respuestas hasta el final. Más de un tercio son de auditoría, como en el examen real.</p>
+  view.innerHTML = resumeCard() + `<section class="sheet"><h2>Simulacro de examen</h2>
+  <p>40 preguntas, 60 minutos, aprobación con 80 % (32 aciertos). Sin respuestas hasta el final. Si sales, la sesión se guarda y el reloj se detiene hasta que continúes. Más de un tercio son de auditoría, como en el examen real.</p>
   <p class="small mute">El examen es de libro abierto: practica con el PDF de la norma a un lado y busca por palabra clave.</p>
   <div class="row" style="margin-top:12px"><button class="btn" id="go">Iniciar simulacro</button></div></section>
   ${hist.length ? `<section class="sheet"><h3>Tus últimos intentos</h3><div class="tw"><table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Tiempo</th></tr></thead><tbody>${hist.map(h => `<tr><td class="mono">${h.date}</td><td class="mono">${h.score}/${h.total} · ${pct(h.score, h.total)}%</td><td>${h.pass ? "Aprobado" : "No aprobado"}</td><td class="mono">${Math.floor(h.secs / 60)} min</td></tr>`).join("")}</tbody></table></div></section>` : ""}`;
@@ -829,7 +865,7 @@ function vSim() {
   $("#go").onclick = () => {
     let qs = [];
     MIX.forEach(m => { qs = qs.concat(shuffle(BANK.filter(q => q.t === m[0])).slice(0, m[1])); });
-    sess = makeSession(shuffle(qs), "sim", 3600); renderSession(view, "Volver al simulacro"); window.scrollTo(0, 0);
+    sess = makeSession(shuffle(qs), "sim", 3600, "simulacro"); renderSession(view, "Volver al simulacro"); window.scrollTo(0, 0);
   };
 }
 
@@ -840,7 +876,7 @@ function vErrores() {
   view.innerHTML = `<section class="sheet"><div class="row sp"><h2>Mis errores (${wrong.length})</h2><div class="row"><button class="btn sm" id="rep">Practicar estas</button><button class="btn ghost sm" id="cp">Copiar lista</button></div></div><p class="small mute" id="msg"></p></section>` +
     wrong.map(q => `<section class="sheet"><span class="tag">${esc(TEMAS[q.t])}</span><p class="qtext" style="margin-top:8px">${esc(q.q)}</p><p class="small"><b>Correcta:</b> ${esc(q.o[q.a])}</p><p class="small mute">${esc(q.w)} ${q.r ? `<span class="tag">${esc(q.r)}</span>` : ""}</p></section>`).join("");
   view.onclick = e => {
-    if (e.target.id === "rep") { sess = makeSession(shuffle(wrong), "study"); location.hash = "banco"; if ((location.hash || "") === "#banco") route(); }
+    if (e.target.id === "rep") { sess = makeSession(shuffle(wrong), "study", 0, "banco"); location.hash = "banco"; if ((location.hash || "") === "#banco") route(); }
     if (e.target.id === "cp") {
       const txt = wrong.map(q => "- " + q.q + "\n  Correcta: " + q.o[q.a]).join("\n");
       const ok = () => { $("#msg").textContent = "Lista copiada."; };
@@ -850,7 +886,39 @@ function vErrores() {
   };
 }
 
+view.addEventListener("click", e => {
+  const r = e.target.closest("[data-res]"); if (!r) return;
+  if (r.dataset.res === "drop") { S.sess = null; save(); route(); return; }
+  const rs = restore(S.sess);
+  if (!rs) { S.sess = null; save(); route(); return; }
+  sess = rs;
+  const w = rs.mode === "sim" ? "simulacro" : (rs.where || "banco");
+  if (location.hash !== "#" + w) location.hash = w; else route();
+});
+document.addEventListener("visibilitychange", () => { if (document.hidden) persistSess(); });
+window.addEventListener("pagehide", persistSess);
 route();
+
+/* Guardado en la cuenta (solo dentro de claude.ai): el avance sobrevive a limpiar el navegador o cambiar de equipo. */
+(async function initCuenta() {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const db = await window.claude.use("db"), user = await window.claude.use("user");
+    if (!db || !user) return;
+    const id = await user.id(); if (!id) return;
+    const ref = db.collection("data/users/" + id).doc("ruta");
+    const snap = await Promise.race([ref.get(), new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 10000))]);
+    dbRef = ref;
+    if (snap.exists) {
+      const d = snap.data() || {};
+      if ((d.updated || 0) > (S.updated || 0)) {
+        S = Object.assign({ stats: {}, sims: [], checks: {}, sess: null, updated: 0 }, JSON.parse(JSON.stringify(d)));
+        try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+        if (!sess) route();
+      } else pushDb();
+    } else pushDb();
+  } catch (e) {}
+})();
 </script>
 
 </body>
