@@ -1,0 +1,28 @@
+{%- comment -%}
+  Incrusta una grabación de terminal asciinema.
+  Uso:  {% include asciinema.html cast="/assets/casts/NOMBRE.cast" %}
+  Opcionales: cols rows poster title
+  El .cast se graba con:  asciinema rec NOMBRE.cast
+{%- endcomment -%}
+{%- assign pid = include.cast | slugify -%}
+<figure class="asciinema">
+  <div id="ac-{{ pid }}" class="asciinema-embed"></div>
+  {%- if include.title %}<figcaption>{{ include.title }}</figcaption>{% endif -%}
+</figure>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof AsciinemaPlayer === 'undefined') { return; }
+    AsciinemaPlayer.create(
+      '{{ include.cast | relative_url }}',
+      document.getElementById('ac-{{ pid }}'),
+      {
+        cols: {{ include.cols | default: 90 }},
+        rows: {{ include.rows | default: 24 }},
+        poster: '{{ include.poster | default: "npt:0:01" }}',
+        theme: 'asciinema',
+        fit: 'width',
+        controls: true
+      }
+    );
+  });
+</script>

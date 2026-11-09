@@ -1,0 +1,5 @@
+{"version": 2, "width": 90, "height": 12, "title": "Demo del reproductor asciinema"}
+[0.3, "o", "\u001b[1;32mwolf@kali\u001b[0m:\u001b[1;34m~\u001b[0m$ echo 'Reproductor asciinema funcionando en HackNotes'\r\n"]
+[1.1, "o", "Reproductor asciinema funcionando en HackNotes\r\n"]
+[1.9, "o", "\u001b[1;32mwolf@kali\u001b[0m:\u001b[1;34m~\u001b[0m$ \u001b[2m# las grabaciones reales se hacen con: asciinema rec sesion.cast\u001b[0m\r\n"]
+[3.0, "o", "\u001b[1;32mwolf@kali\u001b[0m:\u001b[1;34m~\u001b[0m$ \r\n"]

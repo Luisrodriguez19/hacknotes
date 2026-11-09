@@ -1,0 +1,24 @@
+<!-- HackNotes · soporte de medios dinámicos (asciinema + mermaid) -->
+<!-- Minimal Mistakes carga este archivo dentro de <head> automáticamente. -->
+
+<!-- asciinema player: grabaciones de terminal reproducibles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.js"></script>
+
+<!-- mermaid: diagramas de cadena de ataque desde bloques ```mermaid -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'strict' });
+  window.addEventListener('DOMContentLoaded', () => {
+    // Rouge envuelve ```mermaid como .language-mermaid; lo convertimos a <pre class="mermaid">
+    document.querySelectorAll('.language-mermaid').forEach((el) => {
+      const pre = document.createElement('pre');
+      pre.className = 'mermaid';
+      pre.textContent = el.textContent;
+      el.replaceWith(pre);
+    });
+    if (document.querySelector('pre.mermaid')) {
+      mermaid.run({ querySelector: 'pre.mermaid' });
+    }
+  });
+</script>
